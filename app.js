@@ -380,10 +380,10 @@ class App{
       this.userData.selectPressed = false
 
       if(this.INTERSECTION){
-        const offsetPosition = {x: -INTERSECTION.x, y: -INTERSECTION.y, z: -INTERSECTION.z, w:1}
+        const offsetPosition = {x: -this.INTERSECTION.x, y: -this.INTERSECTION.y, z: -this.INTERSECTION.z, w:1}
         const offsetRotation = new THREE.Quaternion()
         const transform = new XRRigidTransform(offsetPosition, offsetRotation)
-        const teleportSpaceOffset = baseReferenceSpace.getOffsetReferenceSpace(transform)
+        const teleportSpaceOffset = this.baseReferenceSpace.getOffsetReferenceSpace(transform)
 
         this.renderer.xr.setReferenceSpace(teleportSpaceOffset)
       }
