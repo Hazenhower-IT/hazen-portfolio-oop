@@ -289,7 +289,7 @@ class App{
        //
        
        const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
+        content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
         fontSize: 0.08
        });
       
@@ -325,7 +325,7 @@ class App{
        //
        
        const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
+        content: "Qui potrete immergervi nel meraviglioso mondo di Modern Musa, dove pixel e birra si incontrano per danzare sullo schermo!",
         fontSize: 0.08
        });
       
@@ -362,7 +362,7 @@ class App{
        //
        
        const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
+        content: "Try my games!",
         fontSize: 0.08
        });
       
@@ -399,7 +399,7 @@ class App{
        //
        
        const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
+        content: "Hai un idea per il mondo digitale ma non sai come realizzarla? Grazie alla nostra passione per le nuove tecnologie Stream System Designer portera' il vostro business digitale al livello successivo!",
         fontSize: 0.08
        });
       
