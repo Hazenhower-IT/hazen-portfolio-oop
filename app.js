@@ -4,6 +4,7 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry"
 import {VRButton} from "three/examples/jsm/webxr/VRButton"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as THREE from "three"
+import * as CANNON from "cannon"
 import * as dat from "dat.gui"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   
@@ -35,7 +36,7 @@ class App{
       progressBarContainer.style.display = "none"
     } 
 
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
     this.camera.position.set(0, 1.6, 0);
     
@@ -346,25 +347,25 @@ class App{
    this.loadModels()
 
 
-    //this.initPhysics();
+    this.initPhysics();
   }
 
-  // initPhysics(){
-  //   this.world = new CANNON.World();
-  //   this.dt = 1.0 / 60.0;
-  //   this.damping = 0.01;
+  initPhysics(){
+    this.world = new CANNON.World();
+    this.dt = 1.0 / 60.0;
+    this.damping = 0.01;
 
-  //   this.world.broadphase = new CANNON.NaiveBroadphase();
-  //   this.world.gravity.set(0, -10, 0);
+    this.world.broadphase = new CANNON.NaiveBroadphase();
+    this.world.gravity.set(0, -10, 0);
 
-  //   const groundShape = new CANNON.Plane();
-  //   const groundBody = new CANNON.Body({mass:0 })
-  //   groundBody.quaternion.setFromAxisAngle( new CANNON.Vec3(1, 0, 0), -Math.PI/2);
-  //   groundBody.addShape(groundShape)
-  //   this.world.add(groundBody);
+    const groundShape = new CANNON.Plane();
+    const groundBody = new CANNON.Body({mass:0 })
+    groundBody.quaternion.setFromAxisAngle( new CANNON.Vec3(1, 0, 0), -Math.PI/2);
+    groundBody.addShape(groundShape)
+    this.world.add(groundBody);
     
 
-  // }
+  }
 
   setupVR(){
     this.renderer.xr.enabled = true;
@@ -384,7 +385,6 @@ class App{
 
       
       if(self.INTERSECTION){
-        console.log("ciao")
         const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
         const offsetRotation = new THREE.Quaternion()
         const transform = new XRRigidTransform(offsetPosition, offsetRotation)
