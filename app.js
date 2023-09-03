@@ -66,6 +66,7 @@ class App{
     this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     
+     
     this.renderer.xr.addEventListener("sessionstart", ()=>{
       this.baseReferenceSpace = this.renderer.xr.getReferenceSpace()
     })
@@ -393,6 +394,14 @@ class App{
       controller.addEventListener("selectstart", onSelectStart)
       controller.addEventListener("selectend", onSelectEnd)
     }) 
+
+    if(this.controllers[0]){
+      this.controllers[0].addEventListener("connected", function(e){
+        if(this.renderer.xr.isPresenting){
+          this.controllers[0].add(listener)
+        }
+      })
+    }
   }
 
   buildControllers(){
