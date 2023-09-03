@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      body{
+        margin:0;
+        padding:0;
+      }
+    </style>
+    <link rel="stylesheet" href="./style.css"/>
+  </head>
+  <body>
+    <script type="module">
+      import {App} from "./app.js";
+      document.addEventListener("DOMContentLoaded", function(){
+        const app = new App();
+        window.app = app;
+      })
+    </script>
+
+    <div id="menu">
+
+      <div id="img_container">
+        <img src="/logo-hazen.png" style="height: 100%; width: 500px; " alt="modern musa logo" />
+      </div>
+
+      <div class="content_container">
+        <div id="content">
+
+          <div class="title">
+            <h1 class="stroke">Alessio Aquilanti <br> Digital Curriculum</h1>
+            <h1 class="main">Alessio Aquilanti <br> Digital Curriculum</h1>
+          </div>
+        
+          <div>
+            <p>Designed and made by Alessio Aquilanti alias Hazenhower </p>
+          </div>
+
+          <div>
+            <p class="instructions">Instructions:</p>
+            <p>Arrow Keys Or W/A/S/D To Move Around</p>
+            <p>Shift to Run</p>
+            <p>Space for Jump</p>
+            <p>Mouse To Look Around</p>
+            <p>Esc To Pause</p>
+          </div>
+      
+          <div id="play_button">
+            <p>Enter The Gallery</p>
+          </div>
+
+        </div>
+      </div>
+      
+    </div>
+    <!---->
+
+    <div class="progress-bar-container">
+      <label for="progress-bar">Loading...</label>
+      <progress id="progress-bar" value="0" max="100"></progress>
+    </div>
+  </body>
+</html>

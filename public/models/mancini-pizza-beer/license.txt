@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mancini Pizza&Beer
+* source:	https://sketchfab.com/3d-models/mancini-pizzabeer-3d996df8d5374071b1b13584775d64d3
+* author:	GrunyStudio (https://sketchfab.com/grunystudio)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mancini Pizza&Beer" (https://sketchfab.com/3d-models/mancini-pizzabeer-3d996df8d5374071b1b13584775d64d3) by GrunyStudio (https://sketchfab.com/grunystudio) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

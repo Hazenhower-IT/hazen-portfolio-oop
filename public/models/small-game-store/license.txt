@@ -1,0 +1,11 @@
+Model Information:
+* title:	Store Small (Game Ready)
+* source:	https://sketchfab.com/3d-models/store-small-game-ready-dda56293d6d44896a842b466382c58a1
+* author:	Monstr 3d (https://sketchfab.com/monstranim)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Store Small (Game Ready)" (https://sketchfab.com/3d-models/store-small-game-ready-dda56293d6d44896a842b466382c58a1) by Monstr 3d (https://sketchfab.com/monstranim) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Music Store
+* source:	https://sketchfab.com/3d-models/music-store-4f78c8406e8b431998711f247f37f86b
+* author:	robinvlasveld (https://sketchfab.com/robinvlasveld)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Music Store" (https://sketchfab.com/3d-models/music-store-4f78c8406e8b431998711f247f37f86b) by robinvlasveld (https://sketchfab.com/robinvlasveld) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Eagle Transporter - Passenger Pod - Space: 1999
+* source:	https://sketchfab.com/3d-models/eagle-transporter-passenger-pod-space-1999-2355a16422024dd4b6b689deb06a824c
+* author:	timblewee (https://sketchfab.com/timblewee)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Eagle Transporter - Passenger Pod - Space: 1999" (https://sketchfab.com/3d-models/eagle-transporter-passenger-pod-space-1999-2355a16422024dd4b6b689deb06a824c) by timblewee (https://sketchfab.com/timblewee) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
