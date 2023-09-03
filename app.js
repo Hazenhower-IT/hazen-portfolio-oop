@@ -6,9 +6,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as THREE from "three"
 import * as CANNON from "cannon"
 import * as dat from "dat.gui"
+import ThreeMeshUI from 'three-mesh-ui'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   
 import {XRControllerModelFactory} from "three/addons/webxr/XRControllerModelFactory.js"
+
+import FontJSON from './src/font/Roboto-msdf.json';
+import FontImage from './src/font/Roboto-msdf.png';
 
 class App{
   constructor(){
@@ -237,6 +241,32 @@ class App{
       this.house1.scale.set(0.03, 0.03, 0.03)
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
+      const container = new ThreeMeshUI.Block({
+        width: 2,
+        height: 1.5,
+        padding: 0.2,
+        fontFamily: FontJSON,
+        fontTexture: FontImage,
+       });
+       
+       //
+       
+       const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+       });
+      
+       
+       container.add( text );
+       container.position.set(56, 1.6, 59)
+       container.rotation.y = -Math.PI/2
+      
+      //VISIBILITA UI
+      //  container.visible = false
+       
+      // scene is a THREE.Scene (see three.js)
+      this.scene.add( container );
+      
       this.scene.add(this.house1)
     })
 
@@ -248,6 +278,31 @@ class App{
       this.musicStore.scale.set(1.5, 1.5, 1.5)
       this.musicStore.position.set(-50, 0.1, 70)
       this.musicStore.rotation.z += Math.PI /2
+      const container = new ThreeMeshUI.Block({
+        width: 2,
+        height: 1.5,
+        padding: 0.2,
+        fontFamily: FontJSON,
+        fontTexture: FontImage,
+       });
+       
+       //
+       
+       const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+       });
+      
+       
+       container.add( text );
+       container.position.set(-53.1, 1.6, 61)
+       container.rotation.y = Math.PI/2
+      
+       //VISIBILITA UI
+       //  container.visible = false
+       
+      // scene is a THREE.Scene (see three.js)
+      this.scene.add( container );
       this.scene.add(this.musicStore)
     })
 
@@ -259,6 +314,31 @@ class App{
       this.gameStore.scale.set(.05, .05, .05)
       this.gameStore.position.set(-50, 0, 40)
       this.gameStore.rotation.z += -Math.PI /2
+      const container = new ThreeMeshUI.Block({
+        width: 2,
+        height: 1.5,
+        padding: 0.2,
+        fontFamily: FontJSON,
+        fontTexture: FontImage,
+       });
+       
+       //
+       
+       const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+       });
+      
+       
+       container.add( text );
+       container.position.set(-46.4, 1.6, 42)
+       container.rotation.y = Math.PI/2
+      
+      //VISIBILITA UI
+       //  container.visible = false
+       
+      // scene is a THREE.Scene (see three.js)
+      this.scene.add( container );
       this.scene.add(this.gameStore)
     })
 
@@ -270,6 +350,32 @@ class App{
       this.arcadeCity.scale.set(.11, .11, .11)
       this.arcadeCity.position.set(30, 2.2, 20)
       this.arcadeCity.rotation.z += -Math.PI /2
+
+      const container = new ThreeMeshUI.Block({
+        width: 2,
+        height: 1.5,
+        padding: 0.2,
+        fontFamily: FontJSON,
+        fontTexture: FontImage,
+       });
+       
+       //
+       
+       const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+       });
+      
+       
+       container.add( text );
+       container.position.set(30, 1.6, 20)
+       container.rotation.y = -Math.PI/2
+      
+      //VISIBILITA UI
+       //  container.visible = false
+       
+      // scene is a THREE.Scene (see three.js)
+      this.scene.add( container );
       this.scene.add(this.arcadeCity)
     })
 
@@ -281,6 +387,32 @@ class App{
       this.deployosHermanos.scale.set(1.5, 1.5, 1.5)
       this.deployosHermanos.position.set(-60, 0.01, -1.64)
       this.deployosHermanos.rotation.z += -Math.PI /2
+
+      const container = new ThreeMeshUI.Block({
+        width: 2,
+        height: 1.5,
+        padding: 0.2,
+        fontFamily: FontJSON,
+        fontTexture: FontImage,
+       });
+       
+       //
+       
+       const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+       });
+      
+       
+       container.add( text );
+       container.position.set(-60, 1.6, 6)
+      //  container.rotation.y = -Math.PI/2
+      
+      //VISIBILITA UI
+      //  container.visible = false
+       
+      // scene is a THREE.Scene (see three.js)
+      this.scene.add( container );
       this.scene.add(this.deployosHermanos)
     })
 
@@ -344,10 +476,12 @@ class App{
     this.marker.visible = false;
     this.scene.add(this.marker)
 
-   this.loadModels()
+    this.loadModels()
 
 
     this.initPhysics();
+  
+    
   }
 
   initPhysics(){
@@ -430,8 +564,6 @@ class App{
 
   handleController(controller){
     if(controller.userData.selectPressed === true){
-      
-      
 
       this.workingMatrix.identity().extractRotation(controller.matrixWorld)
 
@@ -474,6 +606,8 @@ class App{
     }
 
     this.marker.visible = this.INTERSECTION !== undefined
+
+    ThreeMeshUI.update();
 
     this.renderer.render(this.scene, this.camera)
   }
