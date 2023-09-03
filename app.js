@@ -439,9 +439,10 @@ class App{
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
       const intersects = this.raycaster.intersectObjects([this.plane])
-      controller.children[0].scale.z = intersects[0].distance;
-
+     
       if(intersects.length > 0){
+        controller.children[0].scale.z = intersects[0].distance;
+
         this.INTERSECTION = intersects[0].point
       }
     } 
