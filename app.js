@@ -68,7 +68,7 @@ class App{
     
      
     this.renderer.xr.addEventListener("sessionstart", ()=>{
-      this.controls.dispose(); // Sospendi `PointerLockControls`
+
       this.baseReferenceSpace = this.renderer.xr.getReferenceSpace()
     })
 
@@ -156,8 +156,7 @@ class App{
     this.raycaster = new THREE.Raycaster()
     this.workingMatrix = new THREE.Matrix4()
     this.origin = new THREE.Vector3();
-    this.INTERSECTION = undefined
-
+    this.INTERSECTION
     this.initScene();
     this.setupVR();
     this.gui = new dat.GUI()
@@ -374,20 +373,24 @@ class App{
 
     this.controllers = this.buildControllers()
 
+    const self = this
+
     function onSelectStart(){
       this.userData.selectPressed = true
     }
 
     function onSelectEnd(){
-      this.userData.selectPressed = false
+     this.userData.selectPressed = false
 
-      if(this.INTERSECTION){
-        const offsetPosition = {x: -this.INTERSECTION.x, y: -this.INTERSECTION.y, z: -this.INTERSECTION.z, w:1}
+      
+      if(self.INTERSECTION){
+        console.log("ciao")
+        const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
         const offsetRotation = new THREE.Quaternion()
         const transform = new XRRigidTransform(offsetPosition, offsetRotation)
-        const teleportSpaceOffset = this.baseReferenceSpace.getOffsetReferenceSpace(transform)
-
-        this.renderer.xr.setReferenceSpace(teleportSpaceOffset)
+        const teleportSpaceOffset = self.baseReferenceSpace.getOffsetReferenceSpace(transform)
+        
+        self.renderer.xr.setReferenceSpace(teleportSpaceOffset)
       }
     }
 
@@ -426,9 +429,9 @@ class App{
 
 
   handleController(controller){
-    if(controller.userData.selectPressed){
+    if(controller.userData.selectPressed === true){
       
-      controller.children[0].scale.z = 10;
+      
 
       this.workingMatrix.identity().extractRotation(controller.matrixWorld)
 
@@ -436,6 +439,7 @@ class App{
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
       const intersects = this.raycaster.intersectObjects([this.plane])
+      controller.children[0].scale.z = intersects[0].distance;
 
       if(intersects.length > 0){
         this.INTERSECTION = intersects[0].point
@@ -451,14 +455,17 @@ class App{
 
     let cameraPos = this.camera.position
 
-    this.INTERSECTION = undefined
+    // this.INTERSECTION = undefined
 
-    if(this.controllers){
-      const self = this;
-      this.controllers.forEach((controller)=>{
-        self.handleController(controller)
-      })
+    
+    for(let i=0; i<=1; i++){
+      if(this.controllers[i].userData.selectPressed === true){
+        this.handleController(this.controllers[i])
+      }
+     
     }
+     
+    
 
     if(this.INTERSECTION){
       this.marker.position.copy(this.INTERSECTION)
