@@ -68,6 +68,7 @@ class App{
     
      
     this.renderer.xr.addEventListener("sessionstart", ()=>{
+      this.controls.dispose(); // Sospendi `PointerLockControls`
       this.baseReferenceSpace = this.renderer.xr.getReferenceSpace()
     })
 
