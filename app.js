@@ -73,7 +73,10 @@ class App{
     
      
     this.renderer.xr.addEventListener("sessionstart", ()=>{
-
+      if(this.renderer.xr.isPresenting){
+        this.sound.play()
+        this.controllers[0].add(this.listener)
+      }
       this.baseReferenceSpace = this.renderer.xr.getReferenceSpace()
     })
 
