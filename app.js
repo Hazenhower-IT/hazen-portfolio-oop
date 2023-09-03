@@ -29,6 +29,7 @@ class App{
     this.fontLoader = new FontLoader()
     this.audioLoader = new THREE.AudioLoader()
     const cubeTextureLoader = new THREE.CubeTextureLoader()
+    this.audioVR = false
 
     const progressBar = document.getElementById("progress-bar")
     loadingManager.onProgress = (url, loaded, total) => {
@@ -73,10 +74,6 @@ class App{
     
      
     this.renderer.xr.addEventListener("sessionstart", ()=>{
-      if(this.renderer.xr.isPresenting){
-        this.sound.play()
-        this.controllers[0].add(this.listener)
-      }
       this.baseReferenceSpace = this.renderer.xr.getReferenceSpace()
     })
 
@@ -587,6 +584,12 @@ class App{
 
   render(){
     const delta = this.clock.getDelta()
+
+    if(this.renderer.xr.isPresenting && this.audioVR === false){
+      this.sound.play()
+      this.controllers[0].add(this.listener)
+      this.audioVR = true
+    }
 
     this.updateMovement(delta)
 
