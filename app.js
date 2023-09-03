@@ -395,13 +395,6 @@ class App{
       controller.addEventListener("selectend", onSelectEnd)
     }) 
 
-    if(this.controllers[0]){
-      this.controllers[0].addEventListener("connected", function(e){
-        if(this.renderer.xr.isPresenting){
-          this.controllers[0].add(listener)
-        }
-      })
-    }
   }
 
   buildControllers(){
