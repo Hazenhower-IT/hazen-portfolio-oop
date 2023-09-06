@@ -41,6 +41,9 @@ class App{
       progressBarContainer.style.display = "none"
     } 
 
+    this.uiToTest = []
+    this.intersectUI
+
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
     this.camera.position.set(0, 1.6, 0);
@@ -66,6 +69,9 @@ class App{
     light.shadow.right = size;
     light.shadow.top = size;
     this.scene.add(light)
+    
+
+    
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -84,10 +90,44 @@ class App{
     // this.controls.target.set(0, 0, -3)
     // this.controls.update();
 
-    //Controls da deploy
+    // Controls da deploy
     this.controls = new PointerLockControls(this.camera, document.body)
     this.controls.addEventListener("unlock", this.showMenu.bind(this))
+   
     
+    //CUSTOM MOUSE CONTROLS ///////////////////////////////////////////////////////////////////
+    //MOUSE/Touch & Mouse/Touch Events
+
+    this.mouse = new THREE.Vector2();
+    this.mouse.x = this.mouse.y = null;
+
+    this.selectState = false;
+
+    window.addEventListener( 'pointermove', ( event ) => {
+      this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+    } );
+
+    window.addEventListener( 'pointerdown', () => {
+      this.selectState = true;
+    } );
+
+    window.addEventListener( 'pointerup', () => {
+      this.selectState = false;
+    } );
+
+    window.addEventListener( 'touchstart', ( event ) => {
+      this.selectState = true;
+      this.mouse.x = ( event.touches[ 0 ].clientX / window.innerWidth ) * 2 - 1;
+      this.mouse.y = -( event.touches[ 0 ].clientY / window.innerHeight ) * 2 + 1;
+    } );
+
+    window.addEventListener( 'touchend', () => {
+      this.selectState = false;
+      this.mouse.x = null;
+      this.mouse.y = null;
+    } );
+
     //modelli
     this.loadedModel
     this.house1
@@ -190,6 +230,7 @@ class App{
   hideMenu(){
     let menu = document.getElementById("menu")
     menu.style.display="none"
+    
   }
 
   showMenu(){
@@ -203,6 +244,27 @@ class App{
     this.renderer.setSize(window.innerWidth, window.innerHeight)
   }
 
+  raycastUI() {
+
+    return this.uiToTest.reduce( ( closestIntersection, obj ) => {
+  
+      const intersection = this.raycaster.intersectObject( obj, true );
+  
+      if ( !intersection[ 0 ] ) return closestIntersection;
+  
+      if ( !closestIntersection || intersection[ 0 ].distance < closestIntersection.distance ) {
+  
+        intersection[ 0 ].object = obj;
+  
+        return intersection[ 0 ];
+  
+      }
+  
+      return closestIntersection;
+  
+    }, null );
+  
+  }
 
   
   updateMovement(delta){
@@ -241,25 +303,117 @@ class App{
       this.house1.scale.set(0.03, 0.03, 0.03)
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
+
+      //UI
       const container = new ThreeMeshUI.Block({
         width: 2,
         height: 1.5,
         padding: 0.2,
         fontFamily: FontJSON,
         fontTexture: FontImage,
-       });
+      });
        
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
-        fontSize: 0.08
-       });
       
        
-       container.add( text );
-       container.position.set(56, 1.6, 59)
-       container.rotation.y = -Math.PI/2
+      const text = new ThreeMeshUI.Text({
+        content: "Some text to be displayed",
+        fontSize: 0.08
+      });
+      
+       
+      container.add( text );
+      container.position.set(56, 1.6, 59)
+      container.rotation.y = -Math.PI/2
+
+      const buttonOptions = {
+        width: 0.4,
+        height: 0.15,
+        justifyContent: 'center',
+        offset: 0.05,
+        margin: 0.02,
+        borderRadius: 0.075
+      };
+    
+      // Options for component.setupState().
+      // It must contain a 'state' parameter, which you will refer to with component.setState( 'name-of-the-state' ).
+    
+      const hoveredStateAttributes = {
+        state: 'hovered',
+        attributes: {
+          offset: 0.035,
+          backgroundColor: new THREE.Color( 0x999999 ),
+          backgroundOpacity: 1,
+          fontColor: new THREE.Color( 0xffffff )
+        },
+      };
+    
+      const idleStateAttributes = {
+        state: 'idle',
+        attributes: {
+          offset: 0.035,
+          backgroundColor: new THREE.Color( 0x666666 ),
+          backgroundOpacity: 0.3,
+          fontColor: new THREE.Color( 0xffffff )
+        },
+      };
+    
+      // Buttons creation, with the options objects passed in parameters.
+    
+      const buttonNext = new ThreeMeshUI.Block( buttonOptions );
+      const buttonPrevious = new ThreeMeshUI.Block( buttonOptions );
+    
+      // Add text to buttons
+    
+      buttonNext.add(
+        new ThreeMeshUI.Text( { content: 'next' } )
+      );
+    
+      buttonPrevious.add(
+        new ThreeMeshUI.Text( { content: 'previous' } )
+      );
+    
+      // Create states for the buttons.
+      // In the loop, we will call component.setState( 'state-name' ) when mouse hover or click
+    
+      const selectedAttributes = {
+        offset: 0.02,
+        backgroundColor: new THREE.Color( 0x777777 ),
+        fontColor: new THREE.Color( 0x222222 )
+      };
+    
+      buttonNext.setupState( {
+        state: 'selected',
+        attributes: selectedAttributes,
+        onSet: () => {
+    
+          currentMesh = ( currentMesh + 1 ) % 3;
+          showMesh( currentMesh );
+    
+        }
+      } );
+      buttonNext.setupState( hoveredStateAttributes );
+      buttonNext.setupState( idleStateAttributes );
+    
+      //
+    
+      buttonPrevious.setupState( {
+        state: 'selected',
+        attributes: selectedAttributes,
+        onSet: () => {
+    
+          currentMesh -= 1;
+          if ( currentMesh < 0 ) currentMesh = 2;
+          showMesh( currentMesh );
+    
+        }
+      } );
+      buttonPrevious.setupState( hoveredStateAttributes );
+      buttonPrevious.setupState( idleStateAttributes );
+    
+      //
+    
+      container.add( buttonNext, buttonPrevious );
+      this.uiToTest.push( buttonNext, buttonPrevious );
       
       //VISIBILITA UI
       //  container.visible = false
@@ -512,6 +666,10 @@ class App{
 
     function onSelectStart(){
       this.userData.selectPressed = true
+      
+      if(self.intersectUI.length > 0){
+        self.selectState = true
+      }
     }
 
     function onSelectEnd(){
@@ -564,21 +722,65 @@ class App{
 
 
   handleController(controller){
-    if(controller.userData.selectPressed === true){
 
-      this.workingMatrix.identity().extractRotation(controller.matrixWorld)
+    
+    let intersectTeleport
 
-      this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
-      this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
+    if ( this.renderer.xr.isPresenting ) {
+      if(controller.userData.selectPressed === true){
 
-      const intersects = this.raycaster.intersectObjects([this.plane])
-     
-      if(intersects.length > 0){
-        controller.children[0].scale.z = intersects[0].distance;
+        this.workingMatrix.identity().extractRotation(controller.matrixWorld)
 
-        this.INTERSECTION = intersects[0].point
+        this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
+        this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
+
+        intersectTeleport = this.raycaster.intersectObjects([this.plane])
+        this.intersectUI = this.raycastUI()
+
+        if( !this.intersectUI && intersectTeleport.length > 0){
+          controller.children[0].scale.z = intersectTeleport[0].distance;
+
+          this.INTERSECTION = intersectTeleport[0].point
+        }
+        
       }
-    } 
+    } else if (this.mouse.x !== null && this.mouse.y !== null ) {
+
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+  
+      intersectUI = this.raycastUI();
+    }
+
+    // Update targeted button state (if any)
+
+    if ( intersectUI && intersectUI.object.isUI ) {
+
+      if ( this.selectState ) {
+
+        // Component.setState internally call component.set with the options you defined in component.setupState
+        intersectUI.object.setState( 'selected' );
+
+      } else {
+
+        // Component.setState internally call component.set with the options you defined in component.setupState
+        intersectUI.object.setState( 'hovered' );
+
+      }
+
+    }
+
+    // Update non-targeted buttons state
+
+    this.uiToTest.forEach( ( obj ) => {
+
+      if ( ( !intersectUI || obj !== intersectUI.object ) && obj.isUI ) {
+
+        // Component.setState internally call component.set with the options you defined in component.setupState
+        obj.setState( 'idle' );
+
+      }
+
+    } );
   }
 
 
@@ -615,6 +817,8 @@ class App{
     this.marker.visible = this.INTERSECTION !== undefined
 
     ThreeMeshUI.update();
+
+  
 
     this.renderer.render(this.scene, this.camera)
   }
