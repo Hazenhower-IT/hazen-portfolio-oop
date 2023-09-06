@@ -667,7 +667,7 @@ class App{
     function onSelectStart(){
       this.userData.selectPressed = true
       
-      if(self.intersectUI.length > 0){
+      if(self.intersectUI && self.intersectUI.object.isUI){
         self.selectState = true
       }
     }
@@ -675,6 +675,7 @@ class App{
     function onSelectEnd(){
      this.userData.selectPressed = false
 
+     self.selectState = false
       
       if(self.INTERSECTION){
         const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
@@ -724,9 +725,9 @@ class App{
   handleController(controller){
 
     
-    let intersectTeleport
+    let intersectTeleport = []
 
-    if ( this.renderer.xr.isPresenting ) {
+    
       if(controller.userData.selectPressed === true){
 
         this.workingMatrix.identity().extractRotation(controller.matrixWorld)
@@ -737,33 +738,33 @@ class App{
         intersectTeleport = this.raycaster.intersectObjects([this.plane])
         this.intersectUI = this.raycastUI()
 
-        if( !this.intersectUI && intersectTeleport.length > 0){
+        if(intersectTeleport.length > 0){
           controller.children[0].scale.z = intersectTeleport[0].distance;
 
           this.INTERSECTION = intersectTeleport[0].point
         }
         
       }
-    } else if (this.mouse.x !== null && this.mouse.y !== null ) {
+      if (this.mouse.x !== null && this.mouse.y !== null && !this.renderer.xr.isPresenting) {
 
-      this.raycaster.setFromCamera( this.mouse, this.camera );
-  
-      intersectUI = this.raycastUI();
-    }
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+    
+        this.intersectUI = this.raycastUI();
+      }
 
     // Update targeted button state (if any)
 
-    if ( intersectUI && intersectUI.object.isUI ) {
+    if ( this.intersectUI && this.intersectUI.object.isUI ) {
 
       if ( this.selectState ) {
 
         // Component.setState internally call component.set with the options you defined in component.setupState
-        intersectUI.object.setState( 'selected' );
+        this.intersectUI.object.setState( 'selected' );
 
       } else {
 
         // Component.setState internally call component.set with the options you defined in component.setupState
-        intersectUI.object.setState( 'hovered' );
+        this.intersectUI.object.setState( 'hovered' );
 
       }
 
@@ -773,7 +774,7 @@ class App{
 
     this.uiToTest.forEach( ( obj ) => {
 
-      if ( ( !intersectUI || obj !== intersectUI.object ) && obj.isUI ) {
+      if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
 
         // Component.setState internally call component.set with the options you defined in component.setupState
         obj.setState( 'idle' );
