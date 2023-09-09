@@ -798,7 +798,7 @@ class App{
 
     let cameraPos = this.camera.position
 
-    // this.INTERSECTION = undefined
+    this.INTERSECTION = undefined
 
     
     for(let i=0; i<=1; i++){
