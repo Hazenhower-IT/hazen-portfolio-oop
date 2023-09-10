@@ -745,6 +745,7 @@ class App{
 
     if(controller.userData.selectPressed === true){
 
+      controller.children[0].scale.z = 10
       this.workingMatrix.identity().extractRotation(controller.matrixWorld)
 
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
@@ -753,7 +754,7 @@ class App{
       intersects = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
       
-      // controller.children[0].scale.z = 10
+      
 
       if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
