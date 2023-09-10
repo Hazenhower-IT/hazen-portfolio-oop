@@ -749,7 +749,7 @@ class App{
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
       
       intersects= this.raycaster.intersectObjects([this.plane, this.uiToTest])
-      // this.intersectUI = this.raycastUI()
+      this.intersectUI = this.raycastUI()
 
       if(intersects.length > 0){
         if(intersects[0].object == this.plane){
