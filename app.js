@@ -741,7 +741,7 @@ class App{
 
   handleVRController(controller){
 
-    //TEST
+    
     let intersects = []
 
     if(controller.userData.selectPressed === true){
@@ -768,27 +768,6 @@ class App{
         
     }
 
-
-    //Originale
-    // let intersectTeleport = []
-      
-    // if(controller.userData.selectPressed === true){
-
-    //   this.workingMatrix.identity().extractRotation(controller.matrixWorld)
-
-    //   this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
-    //   this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
-
-    //   intersectTeleport = this.raycaster.intersectObjects([this.plane])
-    //   this.intersectUI = this.raycastUI()
-
-    //   if(intersectTeleport.length > 0){
-    //     controller.children[0].scale.z = intersectTeleport[0].distance;
-
-    //     this.INTERSECTION = intersectTeleport[0].point
-    //   }
-        
-    // }
 
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
