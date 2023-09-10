@@ -739,7 +739,7 @@ class App{
   handleVRController(controller){
 
     
-    let intersects = []
+    let intersectTeleport = []
       
     if(controller.userData.selectPressed === true){
 
@@ -747,17 +747,14 @@ class App{
 
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
-      
-      intersects= this.raycaster.intersectObjects([this.plane, this.uiToTest])
+
+      intersectTeleport = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
 
-      if(intersects.length > 0){
-        if(intersects[0].object == this.plane){
-          controller.children[0].scale.z = intersects[0].distance;
+      if(intersectTeleport.length > 0){
+        controller.children[0].scale.z = intersectTeleport[0].distance;
 
-          this.INTERSECTION = intersects[0].point
-        }
-        
+        this.INTERSECTION = intersectTeleport[0].point
       }
         
     }
@@ -767,7 +764,9 @@ class App{
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
       controller.children[0].scale.z = this.intersectUI.distance;
+      
       this.updateButtonStates()
+
     }
 
     // Update non-targeted buttons state
@@ -825,25 +824,25 @@ class App{
         this.raycaster.setFromCamera( this.mouse, this.camera );
       
         this.intersectUI = this.raycastUI();
-      }
 
-       // Update targeted button state (if any)
-       if ( this.intersectUI && this.intersectUI.object.isUI ) {
-        this.updateButtonStates()
-      }
-
-      // Update non-targeted buttons state
-
-      this.uiToTest.forEach( ( obj ) => {
-
-        if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
-
-          // Component.setState internally call component.set with the options you defined in component.setupState
-          obj.setState( 'idle' );
-
+        // Update targeted button state (if any)
+        if ( this.intersectUI && this.intersectUI.object.isUI ) {
+          this.updateButtonStates()
         }
 
-      });
+        // Update non-targeted buttons state
+
+        this.uiToTest.forEach( ( obj ) => {
+
+          if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
+
+            // Component.setState internally call component.set with the options you defined in component.setupState
+            obj.setState( 'idle' );
+
+          }
+
+        });
+      }
 
     }
 
