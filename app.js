@@ -258,6 +258,19 @@ class App{
   
   }
 
+  updateButtonStates(){
+    if ( this.selectState ) {
+
+      // Component.setState internally call component.set with the options you defined in component.setupState
+      this.intersectUI.object.setState( 'selected' );
+
+    } else {
+
+      // Component.setState internally call component.set with the options you defined in component.setupState
+      this.intersectUI.object.setState( 'hovered' );
+    }
+  }
+
   
   updateMovement(delta){
     const previousPosition = this.camera.position.clone()
@@ -746,24 +759,12 @@ class App{
         
     }
     
-
     
 
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
       controller.children[0].scale.z = this.intersectUI.distance;
-      if ( this.selectState ) {
-
-        // Component.setState internally call component.set with the options you defined in component.setupState
-        this.intersectUI.object.setState( 'selected' );
-
-      } else {
-
-        // Component.setState internally call component.set with the options you defined in component.setupState
-        this.intersectUI.object.setState( 'hovered' );
-
-      }
-
+      this.updateButtonStates()
     }
 
     // Update non-targeted buttons state
@@ -779,6 +780,8 @@ class App{
 
     } );
   }
+
+  
 
 
   render(){
@@ -822,16 +825,7 @@ class App{
 
         // Update targeted button state (if any)
         if ( this.intersectUI && this.intersectUI.object.isUI ) {
-          if ( this.selectState ) {
-
-            // Component.setState internally call component.set with the options you defined in component.setupState
-            this.intersectUI.object.setState( 'selected' );
-
-          } else {
-
-            // Component.setState internally call component.set with the options you defined in component.setupState
-            this.intersectUI.object.setState( 'hovered' );
-          }
+          this.updateButtonStates()
         }
 
         // Update non-targeted buttons state
