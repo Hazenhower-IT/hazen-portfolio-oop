@@ -753,9 +753,9 @@ class App{
 
       if(intersects.length > 0){
         if(intersects[0].object === this.plane){
-          controller.children[0].scale.z = intersectTeleport[0].distance;
+          controller.children[0].scale.z = intersects[0].distance;
 
-          this.INTERSECTION = intersectTeleport[0].point
+          this.INTERSECTION = intersects[0].point
         }
         
       }
