@@ -749,15 +749,15 @@ class App{
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
-      intersects = this.raycaster.intersectObjects([this.plane, this.uiToTest])
+      intersects = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
 
       if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
-        // if(intersects[0].object.name === this.plane){
-        //   this.INTERSECTION = intersects[0].point
-        // }
+        if(intersects[0].object.name === this.plane){
+          this.INTERSECTION = intersects[0].point
+        }
         
       }
         
