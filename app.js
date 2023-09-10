@@ -739,7 +739,7 @@ class App{
   handleVRController(controller){
 
     
-    let intersectTeleport = []
+    let intersects = []
       
     if(controller.userData.selectPressed === true){
 
