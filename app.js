@@ -755,9 +755,9 @@ class App{
       if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
-        if(intersects[0].object.name === this.plane){
-          this.INTERSECTION = intersects[0].point
-        }
+        // if(intersects[0].object.name === this.plane){
+        //   this.INTERSECTION = intersects[0].point
+        // }
         
       }
         
