@@ -698,8 +698,9 @@ class App{
         const teleportSpaceOffset = self.baseReferenceSpace.getOffsetReferenceSpace(transform)
         
         self.renderer.xr.setReferenceSpace(teleportSpaceOffset)
-        this.children[0].scale.z = 0
+        
       }
+      this.children[0].scale.z = 0
     }
 
     this.controllers.forEach((controller)=>{
@@ -753,12 +754,12 @@ class App{
       if(intersectAll.length > 0){
         controller.children[0].scale.z = intersectAll[0].distance;
       }
-      
+
       intersectTeleport = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
 
       if(intersectTeleport.length > 0){
-        controller.children[0].scale.z = intersectTeleport[0].distance;
+        // controller.children[0].scale.z = intersectTeleport[0].distance;
 
         this.INTERSECTION = intersectTeleport[0].point
       }
