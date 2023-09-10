@@ -633,6 +633,7 @@ class App{
       new THREE.PlaneGeometry(150, 150),
       new THREE.MeshPhongMaterial({map: sampietrino, side: THREE.DoubleSide})
     )
+    this.plane.name ="plane"
     this.plane.rotation.x = -0.5 * Math.PI
     this.plane.receiveShadow = true;
     this.scene.add(this.plane)
@@ -754,7 +755,7 @@ class App{
       if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
-        if(intersects[0].object === this.plane){
+        if(intersects[0].object.name === this.plane){
           this.INTERSECTION = intersects[0].point
         }
         
