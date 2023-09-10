@@ -752,7 +752,7 @@ class App{
       // this.intersectUI = this.raycastUI()
 
       if(intersects.length > 0){
-        if(intersects[0].object === this.plane){
+        if(intersects[0].object == this.plane){
           controller.children[0].scale.z = intersects[0].distance;
 
           this.INTERSECTION = intersects[0].point
@@ -825,25 +825,25 @@ class App{
         this.raycaster.setFromCamera( this.mouse, this.camera );
       
         this.intersectUI = this.raycastUI();
+      }
 
-        // Update targeted button state (if any)
-        if ( this.intersectUI && this.intersectUI.object.isUI ) {
-          this.updateButtonStates()
+       // Update targeted button state (if any)
+       if ( this.intersectUI && this.intersectUI.object.isUI ) {
+        this.updateButtonStates()
+      }
+
+      // Update non-targeted buttons state
+
+      this.uiToTest.forEach( ( obj ) => {
+
+        if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
+
+          // Component.setState internally call component.set with the options you defined in component.setupState
+          obj.setState( 'idle' );
+
         }
 
-        // Update non-targeted buttons state
-
-        this.uiToTest.forEach( ( obj ) => {
-
-          if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
-
-            // Component.setState internally call component.set with the options you defined in component.setupState
-            obj.setState( 'idle' );
-
-          }
-
-        });
-      }
+      });
 
     }
 
