@@ -701,7 +701,7 @@ class App{
         self.renderer.xr.setReferenceSpace(teleportSpaceOffset)
         this.children[0].scale.z = 0
       }
-      // this.children[0].scale.z = 0
+      this.children[0].scale.z = 0
     }
 
     this.controllers.forEach((controller)=>{
