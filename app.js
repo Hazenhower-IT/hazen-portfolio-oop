@@ -701,6 +701,7 @@ class App{
         self.renderer.xr.setReferenceSpace(teleportSpaceOffset)
         this.children[0].scale.z = 0
       }
+
       this.children[0].scale.z = 0
     }
 
@@ -789,26 +790,7 @@ class App{
         
     // }
 
-    // Update targeted button state (if any)
-    if ( this.intersectUI && this.intersectUI.object.isUI ) {
-      controller.children[0].scale.z = this.intersectUI.distance;
-      
-      this.updateButtonStates()
-
-    }
-
-    // Update non-targeted buttons state
-
-    this.uiToTest.forEach( ( obj ) => {
-
-      if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
-
-        // Component.setState internally call component.set with the options you defined in component.setupState
-        obj.setState( 'idle' );
-
-      }
-
-    } );
+    
   }
 
   
@@ -853,26 +835,30 @@ class App{
       
         this.intersectUI = this.raycastUI();
 
-        // Update targeted button state (if any)
-        if ( this.intersectUI && this.intersectUI.object.isUI ) {
-          this.updateButtonStates()
-        }
-
-        // Update non-targeted buttons state
-
-        this.uiToTest.forEach( ( obj ) => {
-
-          if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
-
-            // Component.setState internally call component.set with the options you defined in component.setupState
-            obj.setState( 'idle' );
-
-          }
-
-        });
       }
 
     }
+
+    // Update targeted button state (if any)
+    if ( this.intersectUI && this.intersectUI.object.isUI ) {
+      controller.children[0].scale.z = this.intersectUI.distance;
+      
+      this.updateButtonStates()
+
+    }
+
+    // Update non-targeted buttons state
+
+    this.uiToTest.forEach( ( obj ) => {
+
+      if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
+
+        // Component.setState internally call component.set with the options you defined in component.setupState
+        obj.setState( 'idle' );
+
+      }
+
+    } );
 
     ThreeMeshUI.update();
 
