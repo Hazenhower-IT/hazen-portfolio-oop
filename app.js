@@ -748,13 +748,16 @@ class App{
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
       
-      intersectTeleport = this.raycaster.intersectObjects([this.plane])
-      this.intersectUI = this.raycastUI()
+      intersects= this.raycaster.intersectObjects([this.plane, this.uiToTest])
+      // this.intersectUI = this.raycastUI()
 
-      if(intersectTeleport.length > 0){
-        controller.children[0].scale.z = intersectTeleport[0].distance;
+      if(intersects.length > 0){
+        if(intersects[0].object === this.plane){
+          controller.children[0].scale.z = intersectTeleport[0].distance;
 
-        this.INTERSECTION = intersectTeleport[0].point
+          this.INTERSECTION = intersectTeleport[0].point
+        }
+        
       }
         
     }
