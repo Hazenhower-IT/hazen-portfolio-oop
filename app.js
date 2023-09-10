@@ -44,10 +44,11 @@ class App{
     this.uiToTest = []
     this.intersectUI
 
+    this.player = new THREE.Object3D()
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-
     this.camera.position.set(0, 1.6, 0);
-    
+    this.player.add(this.camera)
+
     this.scene = new THREE.Scene();
     this.scene.background = cubeTextureLoader.load([
       "/skybox/px.jpg",
@@ -57,7 +58,8 @@ class App{
       "/skybox/pz.jpg",
       "/skybox/nz.jpg",
     ])
-
+    // this.scene.add(this.camera)
+    this.scene.add(this.player)
     this.scene.add(new THREE.HemisphereLight(0x555555, 0xffffff));
 
     const light = new THREE.DirectionalLight(0xffffff)
@@ -85,15 +87,6 @@ class App{
 
     container.appendChild(this.renderer.domElement)
 
-    //Controls da debug
-    // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    // this.controls.target.set(0, 0, -3)
-    // this.controls.update();
-
-    // Controls da deploy
-    this.controls = new PointerLockControls(this.camera, document.body)
-    this.controls.addEventListener("unlock", this.showMenu.bind(this))
-   
     
     //CUSTOM MOUSE CONTROLS ///////////////////////////////////////////////////////////////////
     //MOUSE/Touch & Mouse/Touch Events
@@ -102,31 +95,42 @@ class App{
     this.mouse.x = this.mouse.y = null;
 
     this.selectState = false;
+    this.rightMouseDown = false;
 
     window.addEventListener( 'pointermove', ( event ) => {
       this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+      // console.log("mouse x: ", this.mouse.x);
+      // console.log("mouse y: ", this.mouse.y);
     } );
 
-    window.addEventListener( 'pointerdown', () => {
-      this.selectState = true;
+    window.addEventListener( 'mousedown', (event) => {
+      if (event.button === 2) {
+        this.rightMouseDown = true;
+        console.log("secondary button pressed")
+      }
+      else{
+        this.selectState = true;
+        console.log("clicked");
+      }
     } );
 
-    window.addEventListener( 'pointerup', () => {
-      this.selectState = false;
-    } );
+    window.addEventListener( 'mouseup', (event) => {
+      if (event.button === 2) {
+        this.rightMouseDown = false;
+        console.log("secondary button released")
+      }
+      else{
+        this.selectState = false;
+        console.log("unclicked");
+      }
+    });
 
-    window.addEventListener( 'touchstart', ( event ) => {
-      this.selectState = true;
-      this.mouse.x = ( event.touches[ 0 ].clientX / window.innerWidth ) * 2 - 1;
-      this.mouse.y = -( event.touches[ 0 ].clientY / window.innerHeight ) * 2 + 1;
-    } );
+    //impedisce di aprire il menu opzioni quando premi il tasto destro del mouse
+    window.addEventListener('contextmenu', (event) => {
+      event.preventDefault(); // Impedisci l'azione predefinita del menu di contesto
+    });
 
-    window.addEventListener( 'touchend', () => {
-      this.selectState = false;
-      this.mouse.x = null;
-      this.mouse.y = null;
-    } );
 
     //modelli
     this.loadedModel
@@ -138,11 +142,9 @@ class App{
 
     this.parco
     this.fontana
-
-
     
     
-    // Controller
+    // Keyboard Controller
 
     // Tasti
     this.keyPressed = {};
@@ -213,17 +215,11 @@ class App{
   }
 
   startExperience(){
-    //lock the pointer
-   
-    //RIATTIVA DOPO POSIZIONAMENTO PALAZZI
-    this.controls.lock()
-    
-    
+
     //hide the menu
     this.hideMenu()
 
     this.sound.play()
-    
     
   }
 
@@ -270,25 +266,32 @@ class App{
   updateMovement(delta){
     const previousPosition = this.camera.position.clone()
     
+    if(this.rightMouseDown){
+      this.player.rotateOnWorldAxis(new THREE.Vector3(0,1,0), -this.mouse.x * delta)
+    }
+
     if(this.keyPressed.shift){
-      this.moveSpeed = 50 * delta;
+      this.moveSpeed = 20 * delta;
     }
     else{
       this.moveSpeed = 10 * delta;
     }
 
     if(this.keyPressed.ArrowRight || this.keyPressed.d){
-      this.controls.moveRight(this.moveSpeed)
+      this.player.translateX(this.moveSpeed)
     }
     else if(this.keyPressed.ArrowLeft || this.keyPressed.a){
-      this.controls.moveRight(-this.moveSpeed)
+      this.player.translateX(-this.moveSpeed)
     }
     else if(this.keyPressed.ArrowUp || this.keyPressed.w){
-      this.controls.moveForward( this.moveSpeed)
+      this.player.translateZ(-this.moveSpeed)
     }
     else if(this.keyPressed.ArrowDown || this.keyPressed.s){
-      this.controls.moveForward(-this.moveSpeed)
+      this.player.translateZ(this.moveSpeed)
     }
+    
+    //mantiene il player attaccato al pavimento in modo che non possa ne fluttuare, ne andare sotto
+    this.player.position.y = 0
 
     // Aggiungi altre azioni se necessario
   }
@@ -726,34 +729,32 @@ class App{
 
     
     let intersectTeleport = []
+      
+    if(controller.userData.selectPressed === true){
 
-    
-      if(controller.userData.selectPressed === true){
+      this.workingMatrix.identity().extractRotation(controller.matrixWorld)
 
-        this.workingMatrix.identity().extractRotation(controller.matrixWorld)
+      this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
+      this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
-        this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
-        this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
+      intersectTeleport = this.raycaster.intersectObjects([this.plane])
+      this.intersectUI = this.raycastUI()
 
-        intersectTeleport = this.raycaster.intersectObjects([this.plane])
-        this.intersectUI = this.raycastUI()
+      if(intersectTeleport.length > 0){
+        controller.children[0].scale.z = intersectTeleport[0].distance;
 
-        if(intersectTeleport.length > 0){
-          controller.children[0].scale.z = intersectTeleport[0].distance;
-
-          this.INTERSECTION = intersectTeleport[0].point
-        }
+        this.INTERSECTION = intersectTeleport[0].point
+      }
         
-      }
-      if (this.mouse.x !== null && this.mouse.y !== null && !this.renderer.xr.isPresenting) {
-
-        this.raycaster.setFromCamera( this.mouse, this.camera );
+    }
     
-        this.intersectUI = this.raycastUI();
-      }
+    if (this.mouse.x !== null && this.mouse.y !== null && !this.renderer.xr.isPresenting) {
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+    
+      this.intersectUI = this.raycastUI();
+    }
 
     // Update targeted button state (if any)
-
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
 
       if ( this.selectState ) {
@@ -805,14 +806,11 @@ class App{
       if(this.controllers[i].userData.selectPressed === true){
         this.handleController(this.controllers[i])
       }
-     
     }
-     
     
-
     if(this.INTERSECTION){
       this.marker.position.copy(this.INTERSECTION)
-      this.marker.position.y += 0.1
+      this.marker.position.y += 0.01
     }
 
     this.marker.visible = this.INTERSECTION !== undefined
