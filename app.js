@@ -747,12 +747,7 @@ class App{
     }
     
 
-    //inutile qui, da usare per gestire raycast ui in modalità NON VR
-    if (this.mouse.x !== null && this.mouse.y !== null && !this.renderer.xr.isPresenting) {
-      this.raycaster.setFromCamera( this.mouse, this.camera );
     
-      this.intersectUI = this.raycastUI();
-    }
 
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
@@ -817,37 +812,46 @@ class App{
 
     }
     else{
+
       this.updateMovement(delta)
+      //inutile qui, da usare per gestire raycast ui in modalità NON VR
+      if (this.mouse.x !== null && this.mouse.y !== null && !this.renderer.xr.isPresenting) {
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+      
+        this.intersectUI = this.raycastUI();
+
+        // Update targeted button state (if any)
+        if ( this.intersectUI && this.intersectUI.object.isUI ) {
+          controller.children[0].scale.z = this.intersectUI.distance;
+          if ( this.selectState ) {
+
+            // Component.setState internally call component.set with the options you defined in component.setupState
+            this.intersectUI.object.setState( 'selected' );
+
+          } else {
+
+            // Component.setState internally call component.set with the options you defined in component.setupState
+            this.intersectUI.object.setState( 'hovered' );
+          }
+        }
+
+        // Update non-targeted buttons state
+
+        this.uiToTest.forEach( ( obj ) => {
+
+          if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
+
+            // Component.setState internally call component.set with the options you defined in component.setupState
+            obj.setState( 'idle' );
+
+          }
+
+        });
+      }
+      
     }
 
-    //Original
-    // if(this.renderer.xr.isPresenting && this.audioVR === false){
-    //   this.sound.play()
-    //   this.controllers[0].add(this.listener)
-    //   this.audioVR = true
-    // }
-
-    // this.updateMovement(delta)
-
-    
-
-    
-    // for(let i=0; i<=1; i++){
-    //   if(this.controllers[i].userData.selectPressed === true){
-    //     this.handleVRController(this.controllers[i])
-    //   }
-    // }
-    
-    // if(this.INTERSECTION){
-    //   this.marker.position.copy(this.INTERSECTION)
-    //   this.marker.position.y += 0.01
-    // }
-
-    // this.marker.visible = this.INTERSECTION !== undefined
-
     ThreeMeshUI.update();
-
-  
 
     this.renderer.render(this.scene, this.camera)
   }
