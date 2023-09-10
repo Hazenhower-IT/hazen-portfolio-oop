@@ -100,14 +100,11 @@ class App{
     window.addEventListener( 'pointermove', ( event ) => {
       this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
-      // console.log("mouse x: ", this.mouse.x);
-      // console.log("mouse y: ", this.mouse.y);
     } );
 
     window.addEventListener( 'mousedown', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = true;
-        console.log("secondary button pressed")
       }
       else{
         this.selectState = true;
@@ -118,7 +115,6 @@ class App{
     window.addEventListener( 'mouseup', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = false;
-        console.log("secondary button released")
       }
       else{
         this.selectState = false;
@@ -165,7 +161,7 @@ class App{
     };
 
 
-    // Event listener WASD controls
+    // Event listener Keyboard
     document.addEventListener(
       "keydown",
       (e) => {
@@ -265,9 +261,11 @@ class App{
   
   updateMovement(delta){
     const previousPosition = this.camera.position.clone()
+
+    const cameraRotationSpeed = 2
     
     if(this.rightMouseDown){
-      this.player.rotateOnWorldAxis(new THREE.Vector3(0,1,0), -this.mouse.x * delta)
+      this.player.rotateOnWorldAxis(new THREE.Vector3(0,1,0), -this.mouse.x * delta * cameraRotationSpeed)
     }
 
     if(this.keyPressed.shift){
@@ -725,7 +723,7 @@ class App{
   }
 
 
-  handleController(controller){
+  handleVRController(controller){
 
     
     let intersectTeleport = []
@@ -790,32 +788,62 @@ class App{
 
   render(){
     const delta = this.clock.getDelta()
-
-    if(this.renderer.xr.isPresenting && this.audioVR === false){
-      this.sound.play()
-      this.controllers[0].add(this.listener)
-      this.audioVR = true
-    }
-
-    this.updateMovement(delta)
-
+    
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
 
-    
-    for(let i=0; i<=1; i++){
-      if(this.controllers[i].userData.selectPressed === true){
-        this.handleController(this.controllers[i])
+    //TEST
+    if(this.renderer.xr.isPresenting){
+
+      if(this.audioVR === false){
+        this.sound.play()
+        this.controllers[0].add(this.listener)
+        this.audioVR = true
       }
+
+      for(let i=0; i<=1; i++){
+        if(this.controllers[i].userData.selectPressed === true){
+          this.handleVRController(this.controllers[i])
+        }
+      }
+
+      if(this.INTERSECTION){
+        this.marker.position.copy(this.INTERSECTION)
+        this.marker.position.y += 0.01
+      }
+
+      this.marker.visible = this.INTERSECTION !== undefined
+
     }
-    
-    if(this.INTERSECTION){
-      this.marker.position.copy(this.INTERSECTION)
-      this.marker.position.y += 0.01
+    else{
+      this.updateMovement(delta)
     }
 
-    this.marker.visible = this.INTERSECTION !== undefined
+    //Original
+    // if(this.renderer.xr.isPresenting && this.audioVR === false){
+    //   this.sound.play()
+    //   this.controllers[0].add(this.listener)
+    //   this.audioVR = true
+    // }
+
+    // this.updateMovement(delta)
+
+    
+
+    
+    // for(let i=0; i<=1; i++){
+    //   if(this.controllers[i].userData.selectPressed === true){
+    //     this.handleVRController(this.controllers[i])
+    //   }
+    // }
+    
+    // if(this.INTERSECTION){
+    //   this.marker.position.copy(this.INTERSECTION)
+    //   this.marker.position.y += 0.01
+    // }
+
+    // this.marker.visible = this.INTERSECTION !== undefined
 
     ThreeMeshUI.update();
 
