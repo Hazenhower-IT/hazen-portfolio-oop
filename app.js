@@ -13,6 +13,8 @@ import {XRControllerModelFactory} from "three/addons/webxr/XRControllerModelFact
 
 import FontJSON from './src/font/Roboto-msdf.json';
 import FontImage from './src/font/Roboto-msdf.png';
+import Image from "./src/immagine1.jpg"
+import { TortugaUI } from "./public/scripts/createUI"
 
 class App{
   constructor(){
@@ -327,15 +329,14 @@ class App{
         fontTexture: FontImage,
       });
        
-      
-       
-      const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
+
+      const text1 = new ThreeMeshUI.Text({
+        content: "Some text to be displayed 1",
         fontSize: 0.08
       });
       
        
-      container.add( text );
+      container.add( text1 );
       container.position.set(56, 1.6, 59)
       container.rotation.y = -Math.PI/2
 
@@ -400,8 +401,7 @@ class App{
         attributes: selectedAttributes,
         onSet: () => {
     
-          currentMesh = ( currentMesh + 1 ) % 3;
-          showMesh( currentMesh );
+          
     
         }
       } );
@@ -415,10 +415,7 @@ class App{
         attributes: selectedAttributes,
         onSet: () => {
     
-          currentMesh -= 1;
-          if ( currentMesh < 0 ) currentMesh = 2;
-          showMesh( currentMesh );
-    
+
         }
       } );
       buttonPrevious.setupState( hoveredStateAttributes );
@@ -446,31 +443,136 @@ class App{
       this.musicStore.scale.set(1.5, 1.5, 1.5)
       this.musicStore.position.set(-50, 0.1, 70)
       this.musicStore.rotation.z += Math.PI /2
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
+
+      //RIga TEST
+      this.scene.add(TortugaUI());
+
+      //INIZIO ORIGINALE 
+
+      // const container = new ThreeMeshUI.Block({
+      //   // width: 2,
+      //   // height: 1.5,
+      //   padding: 0.025,
+      //   fontFamily: FontJSON,
+      //   fontTexture: FontImage,
+      //   fontColor: new THREE.Color(0xffffff),
+      //   backgroundOpacity: 1
+      // });
+
+      // container.position.set(-53.1, 1.6, 61)
+      // container.rotation.y = Math.PI/2
+      // this.scene.add( container );
        
-       //
+      // const title = new ThreeMeshUI.Block({
+      //   height: 0.2,
+      //   width: 1.5,
+      //   margin: 0.025,
+      //   justifyContent: "center",
+      //   fontSize: 0.09,
+      // })
+
+      // title.add(new ThreeMeshUI.Text({
+      //   content: "Tortuga Studios",
+      // }))
+      // container.add(title)
+
+      // const leftSubBlock = new ThreeMeshUI.Block({
+      //   height: 0.95,
+      //   width: 1.0,
+      //   margin: 0.025,
+      //   padding: 0.025,
+      //   textAlign: "left",
+      //   justifyContent: "end",
+      // })
+
+      // const caption = new ThreeMeshUI.Block({
+      //   height: 0.07,
+      //   width: 0.37,
+      //   textAlign: "center",
+      //   justifyContent: "center"
+      // })
+
+      // caption.add(new ThreeMeshUI.Text({
+      //   content: "Mind your fingers",
+      //   fontSIze: 0.04,
+      // }))
+
+      // leftSubBlock.add(caption)
+
+      // const rightSubBlock = new ThreeMeshUI.Block({
+      //   margin: 0.025,
+      // })
+
+      // const subBlock1 = new ThreeMeshUI.Block({
+      //   height: 0.35,
+      //   width: 0.5,
+      //   margin: 0.025,
+      //   padding: 0.02,
+      //   fontSize: 0.04,
+      //   justifyContent: "center",
+      //   backgroundOpacity: 0
+      // })
+      // subBlock1.add( 
+      //   new ThreeMeshUI.Text({
+      //     content: "bisogna cercare di capire come funziona il posizionamento",
+      //   }),
+
+      //   new ThreeMeshUI.Text({
+      //     content: "bristly",
+      //     color: new THREE.Color(0x92e66c),
+      //   }),
+
+      //   new ThreeMeshUI.Text({
+      //     content: "appearence",
+      //   }),
+      // )
+
+      // const subBlock2 = new ThreeMeshUI.Block({
+      //   height: 0.53,
+      //   width: 0.5,
+      //   margin: 0.01,
+      //   padding: 0.02,
+      //   fontSize: 0.025,
+      //   alignItems: "start",
+      //   textAlign: "justify",
+      //   backgroundOpacity: 0,
+      // })
+      // subBlock2.add(
+      //   new ThreeMeshUI.Text({
+      //     content:"the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-."
+      //   })
+      // )
+
+      // rightSubBlock.add(subBlock1, subBlock2)
+
+      // const contentContainer = new ThreeMeshUI.Block({
+      //   contentDirection: "row",
+      //   padding: 0.02,
+      //   margin: 0.025,
+      //   backgroundOpacity: 0,
+      // })
+      // contentContainer.add(leftSubBlock, rightSubBlock)
+      // container.add(contentContainer)
+
+      // new THREE.TextureLoader().load(Image, (texture) => {
+      //   leftSubBlock.set({
+      //     backgroundTexture: texture,
+      //   })
+      // })
+      //////////////////////////FINE///////////////////////////////
+
+      // const text = new ThreeMeshUI.Text({
+      //   content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
+      //   fontSize: 0.08
+      // });
+      // container.add( text );
        
-       const text = new ThreeMeshUI.Text({
-        content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
-        fontSize: 0.08
-       });
       
-       
-       container.add( text );
-       container.position.set(-53.1, 1.6, 61)
-       container.rotation.y = Math.PI/2
-      
-       //VISIBILITA UI
-       //  container.visible = false
+      //VISIBILITA UI
+      //  container.visible = false
        
       // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
+      
       this.scene.add(this.musicStore)
     })
 
@@ -741,7 +843,7 @@ class App{
 
   handleVRController(controller){
 
-    
+
     let intersects = []
 
     if(controller.userData.selectPressed === true){
