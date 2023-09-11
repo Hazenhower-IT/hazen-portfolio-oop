@@ -274,7 +274,7 @@ class App{
   }
 
   updateButtonStates(){
-    if ( this.selectState ) {
+    if ( this.selectState === true ) {
 
       // Component.setState internally call component.set with the options you defined in component.setupState
       this.intersectUI.object.setState( 'selected' );
@@ -622,14 +622,12 @@ class App{
     this.uiToTest.forEach( ( obj ) => {
 
       if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
-
         // Component.setState internally call component.set with the options you defined in component.setupState
         obj.setState( 'idle' );
         console.log("ciao")
-
       }
 
-    } );
+    });
   }
 
 
