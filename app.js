@@ -613,12 +613,9 @@ class App{
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
       controller.children[0].scale.z = this.intersectUI.distance;
-      
       this.updateButtonStates()
-
     }
 
-    this.intersectUI = undefined
 
     // Update non-targeted buttons state
 
@@ -628,6 +625,7 @@ class App{
 
         // Component.setState internally call component.set with the options you defined in component.setupState
         obj.setState( 'idle' );
+        console.log("ciao")
 
       }
 
@@ -642,7 +640,7 @@ class App{
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
-    this.intersectUI = undefined
+    this.intersectUI = false
 
     //TEST
     if(this.renderer.xr.isPresenting){
@@ -689,7 +687,7 @@ class App{
 
             // Component.setState internally call component.set with the options you defined in component.setupState
             obj.setState( 'idle' );
-            console.log("ciao")
+            
 
           }
 
