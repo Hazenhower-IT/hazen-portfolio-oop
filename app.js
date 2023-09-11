@@ -346,7 +346,13 @@ class App{
     this.scene.add(UnityUI());
 
     //DeployosHermanosUI
-    this.scene.add( DeployosHermanosUI() );
+    const deployosUI = DeployosHermanosUI()
+    const deployosContainer = deployosUI[0]
+    const deployosButtonNext = deployosUI[1]
+    const deployosButtonPrevious = deployosUI[2]
+
+    this.uiToTest.push( deployosButtonNext, deployosButtonPrevious );
+    this.scene.add( deployosContainer );
   }
 
   loadModels(){
