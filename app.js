@@ -588,12 +588,9 @@ class App{
       intersects = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
       
-      if(this.intersectUI){
-        controller.children[0].scale.z = this.intersectUI.distance;
-      }
       
 
-      else if(intersects.length > 0){
+      if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
         if(intersects[0].object.name === "plane"){
@@ -628,13 +625,13 @@ class App{
   }
 
 
+
   render(){
     const delta = this.clock.getDelta()
     
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
-    this.intersectUI = undefined
 
     //TEST
     if(this.renderer.xr.isPresenting){
