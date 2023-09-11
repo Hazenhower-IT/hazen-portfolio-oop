@@ -532,6 +532,7 @@ class App{
      this.userData.selectPressed = false
 
      self.selectState = false
+     self.intersectUI = undefined
       
       if(self.INTERSECTION){
         const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
@@ -608,9 +609,7 @@ class App{
       }
         
     }
-    else{
-      this.intersectUI = undefined
-    }
+    
 
 
     // Update targeted button state (if any)
