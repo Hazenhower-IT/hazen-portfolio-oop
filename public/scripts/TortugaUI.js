@@ -17,7 +17,6 @@ export function TortugaUI(){
 
       container.position.set(-53.1, 1.6, 61)
       container.rotation.y = Math.PI/2
-    //   this.scene.add( container );
        
       const title = new ThreeMeshUI.Block({
         height: 0.2,
@@ -70,12 +69,12 @@ export function TortugaUI(){
       })
       subBlock1.add( 
         new ThreeMeshUI.Text({
-          content: "bisogna cercare di capire come funziona il posizionamento",
+          content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
         }),
 
         new ThreeMeshUI.Text({
           content: "bristly",
-          color: new THREE.Color(0x92e66c),
+          fontColor: new THREE.Color(0x92e66c),
         }),
 
         new ThreeMeshUI.Text({

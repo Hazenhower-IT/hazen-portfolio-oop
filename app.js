@@ -1,20 +1,22 @@
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry"
 import {VRButton} from "three/examples/jsm/webxr/VRButton"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as THREE from "three"
 import * as CANNON from "cannon"
 import * as dat from "dat.gui"
 import ThreeMeshUI from 'three-mesh-ui'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   
 import {XRControllerModelFactory} from "three/addons/webxr/XRControllerModelFactory.js"
 
 import FontJSON from './src/font/Roboto-msdf.json';
 import FontImage from './src/font/Roboto-msdf.png';
 import Image from "./src/immagine1.jpg"
-import { TortugaUI } from "./public/scripts/createUI"
+
+import { TortugaUI } from "./public/scripts/TortugaUI.js"
+import { ModernMusaUI } from "./public/scripts/ModernMusaUI"
+import { UnityUI } from "./public/scripts/UnityUI"
+import { DeployosHermanosUI } from "./public/scripts/DeployosHermanosUI"
+import { House1UI } from "./public/scripts/House1UI"
 
 class App{
   constructor(){
@@ -110,7 +112,6 @@ class App{
       }
       else{
         this.selectState = true;
-        console.log("clicked");
       }
     } );
 
@@ -120,9 +121,9 @@ class App{
       }
       else{
         this.selectState = false;
-        console.log("unclicked");
       }
     });
+    
 
     //impedisce di aprire il menu opzioni quando premi il tasto destro del mouse
     window.addEventListener('contextmenu', (event) => {
@@ -159,7 +160,8 @@ class App{
       65: "a",
       83: "s",
       68: "d",
-      16: "shift"
+      16: "shift",
+      27: "esc"
     };
 
 
@@ -174,6 +176,10 @@ class App{
 
           if(key ==="shift"){
             this.run = true
+          }
+
+          if(key==="esc"){
+            this.showMenu()
           }
         }
       },
@@ -224,7 +230,6 @@ class App{
   hideMenu(){
     let menu = document.getElementById("menu")
     menu.style.display="none"
-    
   }
 
   showMenu(){
@@ -309,306 +314,74 @@ class App{
     // Aggiungi altre azioni se necessario
   }
 
+  loadUIs(){
+    //House1UI
+    const house1UI = House1UI()
+    const House1Container = house1UI[0]
+    const House1ButtonNext = house1UI[1]
+    const House1ButtonPrevious = house1UI[2]
+
+    this.uiToTest.push( House1ButtonNext, House1ButtonPrevious );
+      
+    //VISIBILITA UI
+    //container.visible = false
+    this.scene.add( House1Container );
+
+
+    //Tortuga Studio UI
+    this.scene.add(TortugaUI())
+
+    //ModernMusa UI
+    this.scene.add( ModernMusaUI() );
+
+    //UnityUI
+    this.scene.add(UnityUI());
+
+    //DeployosHermanosUI
+    this.scene.add( DeployosHermanosUI() );
+  }
+
   loadModels(){
 
     //House1
     this.gltfLoader.load("/models/house/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.house1 = this.loadedModel.clone()
+
       this.house1.name="house1"
       this.house1.scale.set(0.03, 0.03, 0.03)
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
-
-      //UI
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-      });
-       
-
-      const text1 = new ThreeMeshUI.Text({
-        content: "Some text to be displayed 1",
-        fontSize: 0.08
-      });
-      
-       
-      container.add( text1 );
-      container.position.set(56, 1.6, 59)
-      container.rotation.y = -Math.PI/2
-
-      const buttonOptions = {
-        width: 0.4,
-        height: 0.15,
-        justifyContent: 'center',
-        offset: 0.05,
-        margin: 0.02,
-        borderRadius: 0.075
-      };
-    
-      // Options for component.setupState().
-      // It must contain a 'state' parameter, which you will refer to with component.setState( 'name-of-the-state' ).
-    
-      const hoveredStateAttributes = {
-        state: 'hovered',
-        attributes: {
-          offset: 0.035,
-          backgroundColor: new THREE.Color( 0x999999 ),
-          backgroundOpacity: 1,
-          fontColor: new THREE.Color( 0xffffff )
-        },
-      };
-    
-      const idleStateAttributes = {
-        state: 'idle',
-        attributes: {
-          offset: 0.035,
-          backgroundColor: new THREE.Color( 0x666666 ),
-          backgroundOpacity: 0.3,
-          fontColor: new THREE.Color( 0xffffff )
-        },
-      };
-    
-      // Buttons creation, with the options objects passed in parameters.
-    
-      const buttonNext = new ThreeMeshUI.Block( buttonOptions );
-      const buttonPrevious = new ThreeMeshUI.Block( buttonOptions );
-    
-      // Add text to buttons
-    
-      buttonNext.add(
-        new ThreeMeshUI.Text( { content: 'next' } )
-      );
-    
-      buttonPrevious.add(
-        new ThreeMeshUI.Text( { content: 'previous' } )
-      );
-    
-      // Create states for the buttons.
-      // In the loop, we will call component.setState( 'state-name' ) when mouse hover or click
-    
-      const selectedAttributes = {
-        offset: 0.02,
-        backgroundColor: new THREE.Color( 0x777777 ),
-        fontColor: new THREE.Color( 0x222222 )
-      };
-    
-      buttonNext.setupState( {
-        state: 'selected',
-        attributes: selectedAttributes,
-        onSet: () => {
-    
-          
-    
-        }
-      } );
-      buttonNext.setupState( hoveredStateAttributes );
-      buttonNext.setupState( idleStateAttributes );
-    
-      //
-    
-      buttonPrevious.setupState( {
-        state: 'selected',
-        attributes: selectedAttributes,
-        onSet: () => {
-    
-
-        }
-      } );
-      buttonPrevious.setupState( hoveredStateAttributes );
-      buttonPrevious.setupState( idleStateAttributes );
-    
-      //
-    
-      container.add( buttonNext, buttonPrevious );
-      this.uiToTest.push( buttonNext, buttonPrevious );
-      
-      //VISIBILITA UI
-      //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       
       this.scene.add(this.house1)
     })
 
     //Music Store - Federici Guitarist
     this.gltfLoader.load("/models/music-store/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.musicStore = this.loadedModel.clone()
+      
       this.musicStore.name="musicStore"
       this.musicStore.scale.set(1.5, 1.5, 1.5)
       this.musicStore.position.set(-50, 0.1, 70)
       this.musicStore.rotation.z += Math.PI /2
-
-      //RIga TEST
-      this.scene.add(TortugaUI());
-
-      //INIZIO ORIGINALE 
-
-      // const container = new ThreeMeshUI.Block({
-      //   // width: 2,
-      //   // height: 1.5,
-      //   padding: 0.025,
-      //   fontFamily: FontJSON,
-      //   fontTexture: FontImage,
-      //   fontColor: new THREE.Color(0xffffff),
-      //   backgroundOpacity: 1
-      // });
-
-      // container.position.set(-53.1, 1.6, 61)
-      // container.rotation.y = Math.PI/2
-      // this.scene.add( container );
-       
-      // const title = new ThreeMeshUI.Block({
-      //   height: 0.2,
-      //   width: 1.5,
-      //   margin: 0.025,
-      //   justifyContent: "center",
-      //   fontSize: 0.09,
-      // })
-
-      // title.add(new ThreeMeshUI.Text({
-      //   content: "Tortuga Studios",
-      // }))
-      // container.add(title)
-
-      // const leftSubBlock = new ThreeMeshUI.Block({
-      //   height: 0.95,
-      //   width: 1.0,
-      //   margin: 0.025,
-      //   padding: 0.025,
-      //   textAlign: "left",
-      //   justifyContent: "end",
-      // })
-
-      // const caption = new ThreeMeshUI.Block({
-      //   height: 0.07,
-      //   width: 0.37,
-      //   textAlign: "center",
-      //   justifyContent: "center"
-      // })
-
-      // caption.add(new ThreeMeshUI.Text({
-      //   content: "Mind your fingers",
-      //   fontSIze: 0.04,
-      // }))
-
-      // leftSubBlock.add(caption)
-
-      // const rightSubBlock = new ThreeMeshUI.Block({
-      //   margin: 0.025,
-      // })
-
-      // const subBlock1 = new ThreeMeshUI.Block({
-      //   height: 0.35,
-      //   width: 0.5,
-      //   margin: 0.025,
-      //   padding: 0.02,
-      //   fontSize: 0.04,
-      //   justifyContent: "center",
-      //   backgroundOpacity: 0
-      // })
-      // subBlock1.add( 
-      //   new ThreeMeshUI.Text({
-      //     content: "bisogna cercare di capire come funziona il posizionamento",
-      //   }),
-
-      //   new ThreeMeshUI.Text({
-      //     content: "bristly",
-      //     color: new THREE.Color(0x92e66c),
-      //   }),
-
-      //   new ThreeMeshUI.Text({
-      //     content: "appearence",
-      //   }),
-      // )
-
-      // const subBlock2 = new ThreeMeshUI.Block({
-      //   height: 0.53,
-      //   width: 0.5,
-      //   margin: 0.01,
-      //   padding: 0.02,
-      //   fontSize: 0.025,
-      //   alignItems: "start",
-      //   textAlign: "justify",
-      //   backgroundOpacity: 0,
-      // })
-      // subBlock2.add(
-      //   new ThreeMeshUI.Text({
-      //     content:"the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-.the males of this species grow to maxix total length of 73cm. ijsjioj sioej psei soi epsie psepi espieopiseops epoise ps-."
-      //   })
-      // )
-
-      // rightSubBlock.add(subBlock1, subBlock2)
-
-      // const contentContainer = new ThreeMeshUI.Block({
-      //   contentDirection: "row",
-      //   padding: 0.02,
-      //   margin: 0.025,
-      //   backgroundOpacity: 0,
-      // })
-      // contentContainer.add(leftSubBlock, rightSubBlock)
-      // container.add(contentContainer)
-
-      // new THREE.TextureLoader().load(Image, (texture) => {
-      //   leftSubBlock.set({
-      //     backgroundTexture: texture,
-      //   })
-      // })
-      //////////////////////////FINE///////////////////////////////
-
-      // const text = new ThreeMeshUI.Text({
-      //   content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
-      //   fontSize: 0.08
-      // });
-      // container.add( text );
-       
-      
-      //VISIBILITA UI
-      //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
       
       this.scene.add(this.musicStore)
     })
 
     //Modern Musa
     this.gltfLoader.load("/models/small-game-store/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.gameStore = this.loadedModel.clone()
+
       this.gameStore.name="gameStore"
       this.gameStore.scale.set(.05, .05, .05)
       this.gameStore.position.set(-50, 0, 40)
       this.gameStore.rotation.z += -Math.PI /2
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Qui potrete immergervi nel meraviglioso mondo di Modern Musa, dove pixel e birra si incontrano per danzare sullo schermo!",
-        fontSize: 0.08
-       });
-      
-       
-       container.add( text );
-       container.position.set(-46.4, 1.6, 42)
-       container.rotation.y = Math.PI/2
-      
-      //VISIBILITA UI
-       //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
+
       this.scene.add(this.gameStore)
     })
 
@@ -616,99 +389,56 @@ class App{
     this.gltfLoader.load("/models/arcade-city/scene.gltf", (model)=>{
       this.loadedModel = model.scene.children[0]
       this.arcadeCity = this.loadedModel.clone()
+     
       this.arcadeCity.name="arcadeCity"
       this.arcadeCity.scale.set(.11, .11, .11)
       this.arcadeCity.position.set(30, 2.2, 20)
       this.arcadeCity.rotation.z += -Math.PI /2
-
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Try my games!",
-        fontSize: 0.08
-       });
       
-       
-       container.add( text );
-       container.position.set(30, 1.6, 20)
-       container.rotation.y = -Math.PI/2
-      
-      //VISIBILITA UI
-       //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       this.scene.add(this.arcadeCity)
     })
 
      //SSD - Deployos Hermanos
      this.gltfLoader.load("/models/deployos-hermanos/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.deployosHermanos = this.loadedModel.clone()
+      
       this.deployosHermanos.name="deployosHermanos"
       this.deployosHermanos.scale.set(1.5, 1.5, 1.5)
       this.deployosHermanos.position.set(-60, 0.01, -1.64)
       this.deployosHermanos.rotation.z += -Math.PI /2
 
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Hai un idea per il mondo digitale ma non sai come realizzarla? Grazie alla nostra passione per le nuove tecnologie Stream System Designer portera' il vostro business digitale al livello successivo!",
-        fontSize: 0.08
-       });
-      
-       
-       container.add( text );
-       container.position.set(-60, 1.6, 6)
-      //  container.rotation.y = -Math.PI/2
-      
-      //VISIBILITA UI
-      //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       this.scene.add(this.deployosHermanos)
     })
 
     //Parco
     this.gltfLoader.load("/models/city-park-at-sunset/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.parco = this.loadedModel.clone()
+      
       this.parco.name="parco"
       this.parco.scale.set(1, 1, 1)
       this.parco.position.set(-7, 0, -36)
+      
       this.scene.add(this.parco)
     })
 
     //Fontana1
     this.gltfLoader.load("/models/medieval-fountain/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.fontana = this.loadedModel.clone()
+      
       this.fontana.name="fontana"
       this.fontana.scale.set(1, 1, 1)
       this.fontana.position.set(-47.6, 0, -36)
+      
       this.scene.add(this.fontana)
     })
 
-
   }
-
 
 
   initScene(){
@@ -748,6 +478,7 @@ class App{
     this.scene.add(this.marker)
 
     this.loadModels()
+    this.loadUIs()
 
 
     this.initPhysics();
@@ -892,8 +623,6 @@ class App{
 
     } );
   }
-
-  
 
 
   render(){
