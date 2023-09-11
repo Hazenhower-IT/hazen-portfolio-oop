@@ -588,9 +588,12 @@ class App{
       intersects = this.raycaster.intersectObjects([this.plane])
       this.intersectUI = this.raycastUI()
       
+      if(this.intersectUI){
+        controller.children[0].scale.z = this.intersectUI.distance;
+      }
       
 
-      if(intersects.length > 0){
+      else if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
         if(intersects[0].object.name === "plane"){
