@@ -284,7 +284,6 @@ class App{
       // Component.setState internally call component.set with the options you defined in component.setupState
       this.intersectUI.object.setState( 'hovered' );
     }
-    this.intersectUI = undefined
   }
 
   
