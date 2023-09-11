@@ -608,6 +608,9 @@ class App{
       }
         
     }
+    else{
+      this.intersectUI = undefined
+    }
 
 
     // Update targeted button state (if any)
@@ -638,7 +641,6 @@ class App{
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
-    this.intersectUI = false
 
     //TEST
     if(this.renderer.xr.isPresenting){
