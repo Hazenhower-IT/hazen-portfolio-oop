@@ -631,6 +631,7 @@ class App{
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
+    this.intersectUI = undefined
 
     //TEST
     if(this.renderer.xr.isPresenting){
