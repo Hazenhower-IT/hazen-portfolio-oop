@@ -618,6 +618,8 @@ class App{
 
     }
 
+    this.intersectUI = undefined
+
     // Update non-targeted buttons state
 
     this.uiToTest.forEach( ( obj ) => {
