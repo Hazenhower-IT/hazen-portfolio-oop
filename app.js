@@ -651,9 +651,9 @@ class App{
       }
 
       for(let i=0; i<=1; i++){
-        if(this.controllers[i].userData.selectPressed === true){
+        // if(this.controllers[i].userData.selectPressed === true){
           this.handleVRController(this.controllers[i])
-        }
+        // }
       }
 
       if(this.INTERSECTION){
