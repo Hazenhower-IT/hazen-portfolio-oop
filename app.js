@@ -106,22 +106,30 @@ class App{
       this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
     } );
 
+    window.addEventListener("pointerdown", ()=>{
+      this.selectState = true;
+    })
+
     window.addEventListener( 'mousedown', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = true;
       }
-      else{
-        this.selectState = true;
-      }
+      // else{
+      //   this.selectState = true;
+      // }
     } );
+
+    window.addEventListener("pointerup", ()=>{
+      this.selectState = false;
+    })
 
     window.addEventListener( 'mouseup', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = false;
       }
-      else{
-        this.selectState = false;
-      }
+      // else{
+      //   this.selectState = false;
+      // }
     });
     
 
@@ -515,9 +523,9 @@ class App{
     function onSelectStart(){
       this.userData.selectPressed = true
       
-      if(self.intersectUI && self.intersectUI.object.isUI){
+      // if(self.intersectUI && self.intersectUI.object.isUI){
         self.selectState = true
-      }
+      //}
     }
 
     function onSelectEnd(){
@@ -632,6 +640,7 @@ class App{
     let cameraPos = this.camera.position
 
     this.INTERSECTION = undefined
+    this.intersectUI = undefined
 
     //TEST
     if(this.renderer.xr.isPresenting){
@@ -678,6 +687,7 @@ class App{
 
             // Component.setState internally call component.set with the options you defined in component.setupState
             obj.setState( 'idle' );
+            console.log("ciao")
 
           }
 
