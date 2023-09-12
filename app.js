@@ -1,18 +1,22 @@
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry"
 import {VRButton} from "three/examples/jsm/webxr/VRButton"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as THREE from "three"
 import * as CANNON from "cannon"
 import * as dat from "dat.gui"
 import ThreeMeshUI from 'three-mesh-ui'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   
 import {XRControllerModelFactory} from "three/addons/webxr/XRControllerModelFactory.js"
 
 import FontJSON from './src/font/Roboto-msdf.json';
 import FontImage from './src/font/Roboto-msdf.png';
+import Image from "./src/immagine1.jpg"
+
+import { TortugaUI } from "./public/scripts/TortugaUI.js"
+import { ModernMusaUI } from "./public/scripts/ModernMusaUI"
+import { UnityUI } from "./public/scripts/UnityUI"
+import { DeployosHermanosUI } from "./public/scripts/DeployosHermanosUI"
+import { House1UI } from "./public/scripts/House1UI"
 
 class App{
   constructor(){
@@ -87,6 +91,7 @@ class App{
 
     container.appendChild(this.renderer.domElement)
 
+
     
     //CUSTOM MOUSE CONTROLS ///////////////////////////////////////////////////////////////////
     //MOUSE/Touch & Mouse/Touch Events
@@ -102,25 +107,35 @@ class App{
       this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
     } );
 
+    window.addEventListener("pointerdown", (event)=>{
+      if(event.button === 0){
+        this.selectState = true;
+      }
+      
+    })
+
     window.addEventListener( 'mousedown', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = true;
       }
-      else{
-        this.selectState = true;
-        console.log("clicked");
-      }
+      // else{
+      //   this.selectState = true;
+      // }
     } );
+
+    window.addEventListener("pointerup", ()=>{
+      this.selectState = false;
+    })
 
     window.addEventListener( 'mouseup', (event) => {
       if (event.button === 2) {
         this.rightMouseDown = false;
       }
-      else{
-        this.selectState = false;
-        console.log("unclicked");
-      }
+      // else{
+      //   this.selectState = false;
+      // }
     });
+    
 
     //impedisce di aprire il menu opzioni quando premi il tasto destro del mouse
     window.addEventListener('contextmenu', (event) => {
@@ -157,7 +172,8 @@ class App{
       65: "a",
       83: "s",
       68: "d",
-      16: "shift"
+      16: "shift",
+      27: "esc"
     };
 
 
@@ -172,6 +188,10 @@ class App{
 
           if(key ==="shift"){
             this.run = true
+          }
+
+          if(key==="esc"){
+            this.showMenu()
           }
         }
       },
@@ -259,7 +279,9 @@ class App{
   }
 
   updateButtonStates(){
-    if ( this.selectState ) {
+
+    if ( this.selectState === true ) {
+
 
       // Component.setState internally call component.set with the options you defined in component.setupState
       this.intersectUI.object.setState( 'selected' );
@@ -307,206 +329,103 @@ class App{
     // Aggiungi altre azioni se necessario
   }
 
+  loadUIs(){
+    //House1UI
+    const house1UI = House1UI()
+    const House1Container = house1UI[0]
+    const House1ButtonNext = house1UI[1]
+    const House1ButtonPrevious = house1UI[2]
+
+    this.uiToTest.push( House1ButtonNext, House1ButtonPrevious );
+      
+    //VISIBILITA UI
+    //container.visible = false
+    this.scene.add( House1Container );
+
+
+    //Tortuga Studio UI
+    const tortugaUI = TortugaUI()
+    const tortugaContainer = tortugaUI[0]
+    const tortugaButtonNext = tortugaUI[1]
+    const tortugaButtonPrevious = tortugaUI[2]
+    const tortugaButtonGoTo = tortugaUI[3]
+
+    this.uiToTest.push(tortugaButtonNext, tortugaButtonPrevious, tortugaButtonGoTo)
+    this.scene.add(tortugaContainer)
+
+    //ModernMusa UI
+    const modernMusaUI = ModernMusaUI()
+    const modernMusaContainer = modernMusaUI[0]
+    const modernMusaButtonNext = modernMusaUI[1]
+    const modernMusaButtonPrevious = modernMusaUI[2]
+    const modernMusaButtonGoTo = modernMusaUI[3]
+
+    this.uiToTest.push(modernMusaButtonNext, modernMusaButtonPrevious, modernMusaButtonGoTo)
+    this.scene.add( modernMusaContainer );
+
+    //UnityUI
+    const unityUI = UnityUI()
+    const unityContainer = unityUI[0]
+    const unityButtonNext = unityUI[1]
+    const unityButtonPrevious = unityUI[2]
+    const unityButtonGoTo = unityUI[3]
+
+    this.uiToTest.push(unityButtonNext, unityButtonPrevious, unityButtonGoTo)
+    this.scene.add(unityContainer);
+
+    //DeployosHermanosUI
+    const deployosUI = DeployosHermanosUI()
+    const deployosContainer = deployosUI[0]
+    const deployosButtonNext = deployosUI[1]
+    const deployosButtonPrevious = deployosUI[2]
+    const deployosButtonGoTo = deployosUI[3]
+
+    this.uiToTest.push( deployosButtonNext, deployosButtonPrevious, deployosButtonGoTo );
+    this.scene.add( deployosContainer );
+  }
+
   loadModels(){
 
     //House1
     this.gltfLoader.load("/models/house/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.house1 = this.loadedModel.clone()
+
       this.house1.name="house1"
       this.house1.scale.set(0.03, 0.03, 0.03)
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
 
-      //UI
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-      });
-       
-      
-       
-      const text = new ThreeMeshUI.Text({
-        content: "Some text to be displayed",
-        fontSize: 0.08
-      });
-      
-       
-      container.add( text );
-      container.position.set(56, 1.6, 59)
-      container.rotation.y = -Math.PI/2
-
-      const buttonOptions = {
-        width: 0.4,
-        height: 0.15,
-        justifyContent: 'center',
-        offset: 0.05,
-        margin: 0.02,
-        borderRadius: 0.075
-      };
-    
-      // Options for component.setupState().
-      // It must contain a 'state' parameter, which you will refer to with component.setState( 'name-of-the-state' ).
-    
-      const hoveredStateAttributes = {
-        state: 'hovered',
-        attributes: {
-          offset: 0.035,
-          backgroundColor: new THREE.Color( 0x999999 ),
-          backgroundOpacity: 1,
-          fontColor: new THREE.Color( 0xffffff )
-        },
-      };
-    
-      const idleStateAttributes = {
-        state: 'idle',
-        attributes: {
-          offset: 0.035,
-          backgroundColor: new THREE.Color( 0x666666 ),
-          backgroundOpacity: 0.3,
-          fontColor: new THREE.Color( 0xffffff )
-        },
-      };
-    
-      // Buttons creation, with the options objects passed in parameters.
-    
-      const buttonNext = new ThreeMeshUI.Block( buttonOptions );
-      const buttonPrevious = new ThreeMeshUI.Block( buttonOptions );
-    
-      // Add text to buttons
-    
-      buttonNext.add(
-        new ThreeMeshUI.Text( { content: 'next' } )
-      );
-    
-      buttonPrevious.add(
-        new ThreeMeshUI.Text( { content: 'previous' } )
-      );
-    
-      // Create states for the buttons.
-      // In the loop, we will call component.setState( 'state-name' ) when mouse hover or click
-    
-      const selectedAttributes = {
-        offset: 0.02,
-        backgroundColor: new THREE.Color( 0x777777 ),
-        fontColor: new THREE.Color( 0x222222 )
-      };
-    
-      buttonNext.setupState( {
-        state: 'selected',
-        attributes: selectedAttributes,
-        onSet: () => {
-    
-          currentMesh = ( currentMesh + 1 ) % 3;
-          showMesh( currentMesh );
-    
-        }
-      } );
-      buttonNext.setupState( hoveredStateAttributes );
-      buttonNext.setupState( idleStateAttributes );
-    
-      //
-    
-      buttonPrevious.setupState( {
-        state: 'selected',
-        attributes: selectedAttributes,
-        onSet: () => {
-    
-          currentMesh -= 1;
-          if ( currentMesh < 0 ) currentMesh = 2;
-          showMesh( currentMesh );
-    
-        }
-      } );
-      buttonPrevious.setupState( hoveredStateAttributes );
-      buttonPrevious.setupState( idleStateAttributes );
-    
-      //
-    
-      container.add( buttonNext, buttonPrevious );
-      this.uiToTest.push( buttonNext, buttonPrevious );
-      
-      //VISIBILITA UI
-      //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       
       this.scene.add(this.house1)
     })
 
     //Music Store - Federici Guitarist
     this.gltfLoader.load("/models/music-store/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.musicStore = this.loadedModel.clone()
+      
       this.musicStore.name="musicStore"
       this.musicStore.scale.set(1.5, 1.5, 1.5)
       this.musicStore.position.set(-50, 0.1, 70)
       this.musicStore.rotation.z += Math.PI /2
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "I Tortuga Studios sono un luogo di incontro per chiunque voglia approcciare o approfondire lo studio della chitarra classica e moderna.",
-        fontSize: 0.08
-       });
       
-       
-       container.add( text );
-       container.position.set(-53.1, 1.6, 61)
-       container.rotation.y = Math.PI/2
-      
-       //VISIBILITA UI
-       //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       this.scene.add(this.musicStore)
     })
 
     //Modern Musa
     this.gltfLoader.load("/models/small-game-store/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.gameStore = this.loadedModel.clone()
+
       this.gameStore.name="gameStore"
       this.gameStore.scale.set(.05, .05, .05)
       this.gameStore.position.set(-50, 0, 40)
       this.gameStore.rotation.z += -Math.PI /2
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Qui potrete immergervi nel meraviglioso mondo di Modern Musa, dove pixel e birra si incontrano per danzare sullo schermo!",
-        fontSize: 0.08
-       });
-      
-       
-       container.add( text );
-       container.position.set(-46.4, 1.6, 42)
-       container.rotation.y = Math.PI/2
-      
-      //VISIBILITA UI
-       //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
+
       this.scene.add(this.gameStore)
     })
 
@@ -514,99 +433,56 @@ class App{
     this.gltfLoader.load("/models/arcade-city/scene.gltf", (model)=>{
       this.loadedModel = model.scene.children[0]
       this.arcadeCity = this.loadedModel.clone()
+     
       this.arcadeCity.name="arcadeCity"
       this.arcadeCity.scale.set(.11, .11, .11)
       this.arcadeCity.position.set(30, 2.2, 20)
       this.arcadeCity.rotation.z += -Math.PI /2
-
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Try my games!",
-        fontSize: 0.08
-       });
       
-       
-       container.add( text );
-       container.position.set(30, 1.6, 20)
-       container.rotation.y = -Math.PI/2
-      
-      //VISIBILITA UI
-       //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       this.scene.add(this.arcadeCity)
     })
 
      //SSD - Deployos Hermanos
      this.gltfLoader.load("/models/deployos-hermanos/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.deployosHermanos = this.loadedModel.clone()
+      
       this.deployosHermanos.name="deployosHermanos"
       this.deployosHermanos.scale.set(1.5, 1.5, 1.5)
       this.deployosHermanos.position.set(-60, 0.01, -1.64)
       this.deployosHermanos.rotation.z += -Math.PI /2
 
-      const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
-        padding: 0.2,
-        fontFamily: FontJSON,
-        fontTexture: FontImage,
-       });
-       
-       //
-       
-       const text = new ThreeMeshUI.Text({
-        content: "Hai un idea per il mondo digitale ma non sai come realizzarla? Grazie alla nostra passione per le nuove tecnologie Stream System Designer portera' il vostro business digitale al livello successivo!",
-        fontSize: 0.08
-       });
-      
-       
-       container.add( text );
-       container.position.set(-60, 1.6, 6)
-      //  container.rotation.y = -Math.PI/2
-      
-      //VISIBILITA UI
-      //  container.visible = false
-       
-      // scene is a THREE.Scene (see three.js)
-      this.scene.add( container );
       this.scene.add(this.deployosHermanos)
     })
 
     //Parco
     this.gltfLoader.load("/models/city-park-at-sunset/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.parco = this.loadedModel.clone()
+      
       this.parco.name="parco"
       this.parco.scale.set(1, 1, 1)
       this.parco.position.set(-7, 0, -36)
+      
       this.scene.add(this.parco)
     })
 
     //Fontana1
     this.gltfLoader.load("/models/medieval-fountain/scene.gltf", (model)=>{
+      
       this.loadedModel = model.scene.children[0]
       this.fontana = this.loadedModel.clone()
+      
       this.fontana.name="fontana"
       this.fontana.scale.set(1, 1, 1)
       this.fontana.position.set(-47.6, 0, -36)
+      
       this.scene.add(this.fontana)
     })
 
-
   }
-
 
 
   initScene(){
@@ -646,6 +522,7 @@ class App{
     this.scene.add(this.marker)
 
     this.loadModels()
+    this.loadUIs()
 
 
     this.initPhysics();
@@ -682,15 +559,20 @@ class App{
     function onSelectStart(){
       this.userData.selectPressed = true
       
-      if(self.intersectUI && self.intersectUI.object.isUI){
+
+      // if(self.intersectUI && self.intersectUI.object.isUI){
         self.selectState = true
-      }
+      //}
+
     }
 
     function onSelectEnd(){
      this.userData.selectPressed = false
 
      self.selectState = false
+
+     self.intersectUI = undefined
+
       
       if(self.INTERSECTION){
         const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
@@ -741,7 +623,7 @@ class App{
 
   handleVRController(controller){
 
-    //TEST
+
     let intersects = []
 
     if(controller.userData.selectPressed === true){
@@ -768,35 +650,16 @@ class App{
         
     }
 
+    
 
-    //Originale
-    // let intersectTeleport = []
-      
-    // if(controller.userData.selectPressed === true){
-
-    //   this.workingMatrix.identity().extractRotation(controller.matrixWorld)
-
-    //   this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
-    //   this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
-
-    //   intersectTeleport = this.raycaster.intersectObjects([this.plane])
-    //   this.intersectUI = this.raycastUI()
-
-    //   if(intersectTeleport.length > 0){
-    //     controller.children[0].scale.z = intersectTeleport[0].distance;
-
-    //     this.INTERSECTION = intersectTeleport[0].point
-    //   }
-        
-    // }
 
     // Update targeted button state (if any)
     if ( this.intersectUI && this.intersectUI.object.isUI ) {
       controller.children[0].scale.z = this.intersectUI.distance;
-      
       this.updateButtonStates()
-
     }
+
+
 
     // Update non-targeted buttons state
 
@@ -806,13 +669,15 @@ class App{
 
         // Component.setState internally call component.set with the options you defined in component.setupState
         obj.setState( 'idle' );
-
+        console.log("ciao")
       }
 
-    } );
+    });
+
   }
 
   
+
 
 
   render(){
@@ -832,9 +697,11 @@ class App{
       }
 
       for(let i=0; i<=1; i++){
-        if(this.controllers[i].userData.selectPressed === true){
+
+        // if(this.controllers[i].userData.selectPressed === true){
           this.handleVRController(this.controllers[i])
-        }
+        // }
+
       }
 
       if(this.INTERSECTION){
@@ -867,6 +734,7 @@ class App{
 
             // Component.setState internally call component.set with the options you defined in component.setupState
             obj.setState( 'idle' );
+
 
           }
 
