@@ -21,40 +21,45 @@ export function DeployosHermanosUI(){
         Image, Image1, Image2
     ]
 
+    //UI CONTAINER
+
     const container = new ThreeMeshUI.Block({
-        width: 2,
-        height: 1.5,
+        width: 3,
+        height: 2.0,
         padding: 0.002,
         fontFamily: FontJSON,
         fontTexture: FontImage,
     });
 
+    //TITLE BLOCK
     const title = new ThreeMeshUI.Block({
         height: 0.2,
-        width: 1.5,
+        width: 2.5,
         margin: 0.025,
         justifyContent: "center",
         fontSize: 0.09,
         backgroundOpacity: 0,
     })
 
+    //TITLE TEXT
     title.add(new ThreeMeshUI.Text({
         content: "Deployos Hermanos",
         
     }))
     container.add(title)
 
+    //DESCRIPTION BLOCK
     const description = new ThreeMeshUI.Block({
         height: 0.4,
-        width: 2,
+        width: 3,
         // margin:0.025,
         // justifyContent: "center",
         fontSize: 0.07,
         backgroundOpacity: 0,
         // textAlign: "left",
     })
-       
-
+    
+    //DESCRIPTION TEXT
     const text1 = new ThreeMeshUI.Text({
         content: texts[currentIndex],
         fontSize: 0.08
@@ -63,13 +68,26 @@ export function DeployosHermanosUI(){
        
     container.add( description );
 
+    //IMAGE BLOCK
     const imageBlock = new ThreeMeshUI.Block({
-        height: 0.6,
-        width: 1.8,
+        height: 1.5,
+        width: 2.8,
     })
     container.add(imageBlock)
-    container.position.set(-60, 1.6, 6)
+    container.position.set(-60, 2.5, 6)
 
+    //BUTTONS BLOCK
+    const buttonContainer = new ThreeMeshUI.Block( {
+		justifyContent: 'center',
+		contentDirection: 'row-reverse',
+		fontFamily: FontJSON,
+		fontTexture: FontImage,
+		fontSize: 0.07,
+		padding: 0.02,
+		borderRadius: 0.11
+	} );
+
+    //Button Options object(for fast setup of buttons)
     const buttonOptions = {
         width: 0.4,
         height: 0.15,
@@ -106,6 +124,7 @@ export function DeployosHermanosUI(){
     
     const buttonNext = new ThreeMeshUI.Block( buttonOptions );
     const buttonPrevious = new ThreeMeshUI.Block( buttonOptions );
+    const buttonGoTo = new ThreeMeshUI.Block(buttonOptions)
     
     // Add text to buttons
     
@@ -116,6 +135,10 @@ export function DeployosHermanosUI(){
     buttonPrevious.add(
         new ThreeMeshUI.Text( { content: 'previous' } )
     );
+
+    buttonGoTo.add(
+        new ThreeMeshUI.Text({ content: "See More"})
+    )
     
     // Create states for the buttons.
     // In the loop, we will call component.setState( 'state-name' ) when mouse hover or click
@@ -172,6 +195,19 @@ export function DeployosHermanosUI(){
     buttonPrevious.setupState( hoveredStateAttributes );
     buttonPrevious.setupState( idleStateAttributes );
     
+    //
+
+    buttonGoTo.setupState( {
+        state: 'selected',
+        attributes: selectedAttributes,
+        onSet: () => {
+            window.open("https://hazenhower-portfolio.web.app")
+            window.dispatchEvent(new MouseEvent("pointerup", {button: 0}))
+        }
+    });
+    buttonGoTo.setupState( hoveredStateAttributes );
+    buttonGoTo.setupState( idleStateAttributes );
+    
     function showNextUI(currentUI){
         if(currentIndex === texts.length - 1){
             currentIndex = 0
@@ -183,13 +219,13 @@ export function DeployosHermanosUI(){
     }
 
     
-    container.add( buttonNext, buttonPrevious );
-    
+    buttonContainer.add( buttonNext, buttonPrevious, buttonGoTo );
+    container.add(buttonContainer)
     new THREE.TextureLoader().load(images[currentIndex], (texture) => {
         imageBlock.set({
           backgroundTexture: texture,
         })
     })
 
-    return [container, buttonNext, buttonPrevious]
+    return [container, buttonNext, buttonPrevious, buttonGoTo]
 }

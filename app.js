@@ -106,8 +106,11 @@ class App{
       this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
     } );
 
-    window.addEventListener("pointerdown", ()=>{
-      this.selectState = true;
+    window.addEventListener("pointerdown", (event)=>{
+      if(event.button === 0){
+        this.selectState = true;
+      }
+      
     })
 
     window.addEventListener( 'mousedown', (event) => {
@@ -346,12 +349,13 @@ class App{
     this.scene.add(UnityUI());
 
     //DeployosHermanosUI
-    const deployosUI = DeployosHermanosUI()
+    const deployosUI = DeployosHermanosUI(this.selectState)
     const deployosContainer = deployosUI[0]
     const deployosButtonNext = deployosUI[1]
     const deployosButtonPrevious = deployosUI[2]
+    const deployosButtonGoTo = deployosUI[3]
 
-    this.uiToTest.push( deployosButtonNext, deployosButtonPrevious );
+    this.uiToTest.push( deployosButtonNext, deployosButtonPrevious, deployosButtonGoTo );
     this.scene.add( deployosContainer );
   }
 
