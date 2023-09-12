@@ -340,16 +340,37 @@ class App{
 
 
     //Tortuga Studio UI
-    this.scene.add(TortugaUI())
+    const tortugaUI = TortugaUI()
+    const tortugaContainer = tortugaUI[0]
+    const tortugaButtonNext = tortugaUI[1]
+    const tortugaButtonPrevious = tortugaUI[2]
+    const tortugaButtonGoTo = tortugaUI[3]
+
+    this.uiToTest.push(tortugaButtonNext, tortugaButtonPrevious, tortugaButtonGoTo)
+    this.scene.add(tortugaContainer)
 
     //ModernMusa UI
-    this.scene.add( ModernMusaUI() );
+    const modernMusaUI = ModernMusaUI()
+    const modernMusaContainer = modernMusaUI[0]
+    const modernMusaButtonNext = modernMusaUI[1]
+    const modernMusaButtonPrevious = modernMusaUI[2]
+    const modernMusaButtonGoTo = modernMusaUI[3]
+
+    this.uiToTest.push(modernMusaButtonNext, modernMusaButtonPrevious, modernMusaButtonGoTo)
+    this.scene.add( modernMusaContainer );
 
     //UnityUI
-    this.scene.add(UnityUI());
+    const unityUI = UnityUI()
+    const unityContainer = unityUI[0]
+    const unityButtonNext = unityUI[1]
+    const unityButtonPrevious = unityUI[2]
+    const unityButtonGoTo = unityUI[3]
+
+    this.uiToTest.push(unityButtonNext, unityButtonPrevious, unityButtonGoTo)
+    this.scene.add(unityContainer);
 
     //DeployosHermanosUI
-    const deployosUI = DeployosHermanosUI(this.selectState)
+    const deployosUI = DeployosHermanosUI()
     const deployosContainer = deployosUI[0]
     const deployosButtonNext = deployosUI[1]
     const deployosButtonPrevious = deployosUI[2]

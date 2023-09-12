@@ -12,7 +12,7 @@ export function DeployosHermanosUI(){
     let currentIndex = 0;
 
     const texts = [
-        "Hai un idea per il tuo business digitale ma non sai come realizzarla? Vuoi sfruttare la tecnologie piu recenti per creare qualcosa di unico da offrire al tuo pubblico? O vuoi Potenziare la tua presenza online? Contattaci e porta il tuo business al livello successivo!",
+        "Hai un idea per il tuo business digitale ma non sai come realizzarla? Vuoi sfruttare la tecnologie piu recenti per creare qualcosa di unico da offrire al tuo pubblico? O vuoi Potenziare la tua presenza online? Contattaci e porta il tuo business al livello successivo!Hai un idea per il tuo business digitale ma non sai come realizzarla? Vuoi sfruttare la tecnologie piu recenti per creare qualcosa di unico da offrire al tuo pubblico? O vuoi Potenziare la tua presenza online? Contattaci e porta il tuo business al livello successivo!",
         "Some really long text 2",
         "Some really long text 3",
     ]
@@ -24,11 +24,13 @@ export function DeployosHermanosUI(){
     //UI CONTAINER
 
     const container = new ThreeMeshUI.Block({
-        width: 3,
-        height: 2.0,
+        // width: 3,
+        // height: 2.0,
         padding: 0.002,
         fontFamily: FontJSON,
         fontTexture: FontImage,
+        contentDirection:"column",
+        justifyContent: "space-between"
     });
 
     //TITLE BLOCK
@@ -50,9 +52,9 @@ export function DeployosHermanosUI(){
 
     //DESCRIPTION BLOCK
     const description = new ThreeMeshUI.Block({
-        height: 0.4,
+        height: 0.7,
         width: 3,
-        // margin:0.025,
+        margin:0.025,
         // justifyContent: "center",
         fontSize: 0.07,
         backgroundOpacity: 0,
@@ -219,7 +221,7 @@ export function DeployosHermanosUI(){
     }
 
     
-    buttonContainer.add( buttonNext, buttonPrevious, buttonGoTo );
+    buttonContainer.add( buttonNext, buttonGoTo , buttonPrevious,);
     container.add(buttonContainer)
     new THREE.TextureLoader().load(images[currentIndex], (texture) => {
         imageBlock.set({
