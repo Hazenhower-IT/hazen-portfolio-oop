@@ -1,13 +1,15 @@
 import ThreeMeshUI from 'three-mesh-ui'
 import FontJSON from '../../src/font/Roboto-msdf.json';
 import FontImage from '../../src/font/Roboto-msdf.png';
-import Image from "../../src/immagine1.jpg"
-import Image1 from "../../src/deployos-hermanos-insegna.png";
-import Image2 from "../../src/landscape5.jpg";
+import Image from "../../src/ssd1.png"
+import Image1 from "../../src/ssd2.png";
+import Image2 from "../../src/ssd3.png";
 import * as THREE from "three"
 
 
 export function DeployosHermanosUI(){
+
+    const textureLoader = new THREE.TextureLoader()
 
     let currentIndex = 0;
 
@@ -163,7 +165,7 @@ export function DeployosHermanosUI(){
                 currentIndex++
             }
             text1.set({content: texts[currentIndex]})
-            new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+            textureLoader.load(images[currentIndex], (texture) => {
                 imageBlock.set({
                   backgroundTexture: texture,
                 })
@@ -187,7 +189,7 @@ export function DeployosHermanosUI(){
                 currentIndex--
             }
             text1.set({content: texts[currentIndex]})
-            new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+            textureLoader.load(images[currentIndex], (texture) => {
                 imageBlock.set({
                   backgroundTexture: texture,
                 })
@@ -223,7 +225,7 @@ export function DeployosHermanosUI(){
     
     buttonContainer.add( buttonNext, buttonGoTo , buttonPrevious,);
     container.add(buttonContainer)
-    new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+    textureLoader.load(images[currentIndex], (texture) => {
         imageBlock.set({
           backgroundTexture: texture,
         })

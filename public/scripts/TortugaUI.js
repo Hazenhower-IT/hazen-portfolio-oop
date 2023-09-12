@@ -8,6 +8,8 @@ import * as THREE from "three"
 
 export function TortugaUI(){
 
+  const textureLoader = new THREE.TextureLoader()
+
   let currentIndex = 0;
 
   const texts = [
@@ -165,7 +167,7 @@ export function TortugaUI(){
               currentIndex++
           }
           text1.set({content: texts[currentIndex]})
-          new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+          textureLoader.load(images[currentIndex], (texture) => {
               imageBlock.set({
                 backgroundTexture: texture,
               })
@@ -189,7 +191,7 @@ export function TortugaUI(){
               currentIndex--
           }
           text1.set({content: texts[currentIndex]})
-          new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+          textureLoader.load(images[currentIndex], (texture) => {
               imageBlock.set({
                 backgroundTexture: texture,
               })
@@ -225,7 +227,7 @@ export function TortugaUI(){
   
   buttonContainer.add( buttonNext, buttonGoTo , buttonPrevious,);
   container.add(buttonContainer)
-  new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+  textureLoader.load(images[currentIndex], (texture) => {
       imageBlock.set({
         backgroundTexture: texture,
       })

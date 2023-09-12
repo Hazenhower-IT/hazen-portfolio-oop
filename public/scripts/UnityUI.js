@@ -1,19 +1,21 @@
 import ThreeMeshUI from 'three-mesh-ui'
 import FontJSON from '../../src/font/Roboto-msdf.json';
 import FontImage from '../../src/font/Roboto-msdf.png';
-import Image from "../../src/tortuga1.png"
-import Image1 from "../../src/tortuga2.png";
-import Image2 from "../../src/tortuga3.png";
+import Image from "../../src/unity1.png"
+import Image1 from "../../src/unity2.png";
+import Image2 from "../../src/unity3.png";
 import * as THREE from "three"
 
 export function UnityUI(){
 
+  const textureLoader = new THREE.TextureLoader()
+
   let currentIndex = 0;
 
   const texts = [
-      "Nome Gioco 1",
-      "Nome Gioco 2",
-      "Nome Gioco 3",
+      "Jackie Junks",
+      "Flappy Airplane",
+      "Office Runner",
   ]
 
   const images = [
@@ -165,7 +167,7 @@ export function UnityUI(){
               currentIndex++
           }
           text1.set({content: texts[currentIndex]})
-          new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+          textureLoader.load(images[currentIndex], (texture) => {
               imageBlock.set({
                 backgroundTexture: texture,
               })
@@ -189,7 +191,7 @@ export function UnityUI(){
               currentIndex--
           }
           text1.set({content: texts[currentIndex]})
-          new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+          textureLoader.load(images[currentIndex], (texture) => {
               imageBlock.set({
                 backgroundTexture: texture,
               })
@@ -207,13 +209,13 @@ export function UnityUI(){
       onSet: () => {
         switch(currentIndex){
             case 0:
-                window.open("https://hazenhower-portfolio.web.app")
+                window.open("https://play.unity.com/mg/other/my-new-microgame-10069")
                 break;
             case 1:
-                window.open("https://github.com/schteppe/cannon.js/tree/master/examples")
+                window.open("https://sprightly-bubblegum-59957e.netlify.app/")
                 break;
             case 2:
-                window.open("https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event")
+                window.open("https://play.unity.com/mg/other/juniorprogrammerbonuschallenge3-5")
         }
         //   window.open("https://hazenhower-portfolio.web.app")
           window.dispatchEvent(new MouseEvent("pointerup", {button: 0}))
@@ -235,7 +237,7 @@ export function UnityUI(){
   
   buttonContainer.add( buttonNext, buttonGoTo , buttonPrevious,);
   container.add(buttonContainer)
-  new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+  textureLoader.load(images[currentIndex], (texture) => {
       imageBlock.set({
         backgroundTexture: texture,
       })
