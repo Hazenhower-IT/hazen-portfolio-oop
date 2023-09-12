@@ -91,6 +91,7 @@ class App{
 
     container.appendChild(this.renderer.domElement)
 
+
     
     //CUSTOM MOUSE CONTROLS ///////////////////////////////////////////////////////////////////
     //MOUSE/Touch & Mouse/Touch Events
@@ -241,6 +242,7 @@ class App{
   hideMenu(){
     let menu = document.getElementById("menu")
     menu.style.display="none"
+    
   }
 
   showMenu(){
@@ -277,7 +279,9 @@ class App{
   }
 
   updateButtonStates(){
+
     if ( this.selectState === true ) {
+
 
       // Component.setState internally call component.set with the options you defined in component.setupState
       this.intersectUI.object.setState( 'selected' );
@@ -392,6 +396,7 @@ class App{
       this.house1.scale.set(0.03, 0.03, 0.03)
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
+
       
       this.scene.add(this.house1)
     })
@@ -554,16 +559,20 @@ class App{
     function onSelectStart(){
       this.userData.selectPressed = true
       
+
       // if(self.intersectUI && self.intersectUI.object.isUI){
         self.selectState = true
       //}
+
     }
 
     function onSelectEnd(){
      this.userData.selectPressed = false
 
      self.selectState = false
+
      self.intersectUI = undefined
+
       
       if(self.INTERSECTION){
         const offsetPosition = {x: -self.INTERSECTION.x, y: -self.INTERSECTION.y, z: -self.INTERSECTION.z, w:1}
@@ -640,6 +649,7 @@ class App{
       }
         
     }
+
     
 
 
@@ -650,18 +660,23 @@ class App{
     }
 
 
+
     // Update non-targeted buttons state
 
     this.uiToTest.forEach( ( obj ) => {
 
       if ( ( !this.intersectUI || obj !== this.intersectUI.object ) && obj.isUI ) {
+
         // Component.setState internally call component.set with the options you defined in component.setupState
         obj.setState( 'idle' );
         console.log("ciao")
       }
 
     });
+
   }
+
+  
 
 
 
@@ -682,9 +697,11 @@ class App{
       }
 
       for(let i=0; i<=1; i++){
+
         // if(this.controllers[i].userData.selectPressed === true){
           this.handleVRController(this.controllers[i])
         // }
+
       }
 
       if(this.INTERSECTION){
@@ -717,7 +734,7 @@ class App{
 
             // Component.setState internally call component.set with the options you defined in component.setupState
             obj.setState( 'idle' );
-            
+
 
           }
 
