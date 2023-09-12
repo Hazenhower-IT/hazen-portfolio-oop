@@ -2,6 +2,8 @@ import ThreeMeshUI from 'three-mesh-ui'
 import FontJSON from '../../src/font/Roboto-msdf.json';
 import FontImage from '../../src/font/Roboto-msdf.png';
 import Image from "../../src/immagine1.jpg"
+import Image1 from "../../src/deployos-hermanos-insegna.png";
+import Image2 from "../../src/landscape5.jpg";
 import * as THREE from "three"
 
 
@@ -10,27 +12,62 @@ export function DeployosHermanosUI(){
     let currentIndex = 0;
 
     const texts = [
-        "Hai un idea per il mondo digitale ma non sai come realizzarla? Grazie alla nostra passione per le nuove tecnologie Stream System Designer portera' il vostro business digitale al livello successivo!",
+        "Hai un idea per il tuo business digitale ma non sai come realizzarla? Vuoi sfruttare la tecnologie piu recenti per creare qualcosa di unico da offrire al tuo pubblico? O vuoi Potenziare la tua presenza online? Contattaci e porta il tuo business al livello successivo!",
         "Some really long text 2",
         "Some really long text 3",
+    ]
+
+    const images = [
+        Image, Image1, Image2
     ]
 
     const container = new ThreeMeshUI.Block({
         width: 2,
         height: 1.5,
-        padding: 0.2,
+        padding: 0.002,
         fontFamily: FontJSON,
         fontTexture: FontImage,
     });
+
+    const title = new ThreeMeshUI.Block({
+        height: 0.2,
+        width: 1.5,
+        margin: 0.025,
+        justifyContent: "center",
+        fontSize: 0.09,
+        backgroundOpacity: 0,
+    })
+
+    title.add(new ThreeMeshUI.Text({
+        content: "Deployos Hermanos",
+        
+    }))
+    container.add(title)
+
+    const description = new ThreeMeshUI.Block({
+        height: 0.4,
+        width: 2,
+        // margin:0.025,
+        // justifyContent: "center",
+        fontSize: 0.07,
+        backgroundOpacity: 0,
+        // textAlign: "left",
+    })
        
 
     const text1 = new ThreeMeshUI.Text({
         content: texts[currentIndex],
         fontSize: 0.08
     });
-      
+    description.add(text1)
        
-    container.add( text1 );
+    container.add( description );
+
+    const imageBlock = new ThreeMeshUI.Block({
+        height: 0.6,
+        width: 1.8,
+    })
+    container.add(imageBlock)
     container.position.set(-60, 1.6, 6)
 
     const buttonOptions = {
@@ -101,6 +138,11 @@ export function DeployosHermanosUI(){
                 currentIndex++
             }
             text1.set({content: texts[currentIndex]})
+            new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+                imageBlock.set({
+                  backgroundTexture: texture,
+                })
+            })
     
         }
     });
@@ -119,7 +161,12 @@ export function DeployosHermanosUI(){
             {
                 currentIndex--
             }
-            text1.set({content: texts[currentIndex]}) 
+            text1.set({content: texts[currentIndex]})
+            new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+                imageBlock.set({
+                  backgroundTexture: texture,
+                })
+            }) 
         }
     });
     buttonPrevious.setupState( hoveredStateAttributes );
@@ -137,6 +184,12 @@ export function DeployosHermanosUI(){
 
     
     container.add( buttonNext, buttonPrevious );
+    
+    new THREE.TextureLoader().load(images[currentIndex], (texture) => {
+        imageBlock.set({
+          backgroundTexture: texture,
+        })
+    })
 
     return [container, buttonNext, buttonPrevious]
 }
