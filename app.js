@@ -585,6 +585,8 @@ class App{
 
     document.body.appendChild(VRButton.createButton(this.renderer))
 
+    const cameraVR = this.renderer.xr.getCamera()
+    this.player.add(cameraVR)
     this.controllers = this.buildControllers()
 
     const self = this
