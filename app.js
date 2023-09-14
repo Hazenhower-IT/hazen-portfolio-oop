@@ -402,7 +402,12 @@ class App{
     const distanceTreshold = 8
     let distanceToUI
     
-    if(this.house1){
+    if(this.renderer.xr.isPresenting){
+      if(this.house1){
+        distanceToUI = this.renderer.xr.getCamera().position.distanceTo(this.house1.position)
+      }
+    }
+    else if(this.house1){
       distanceToUI = this.player.position.distanceTo(this.house1.position)
       console.log(distanceToUI)
     }
@@ -585,8 +590,6 @@ class App{
 
     document.body.appendChild(VRButton.createButton(this.renderer))
 
-    const cameraVR = this.renderer.xr.getCamera()
-    this.player.add(cameraVR)
     this.controllers = this.buildControllers()
 
     const self = this
