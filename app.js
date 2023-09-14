@@ -144,11 +144,21 @@ class App{
 
     //modelli
     this.loadedModel
+
     this.house1
+    this.house1UIContainer
+
     this.musicStore
+    this.tortugaUIContainer
+
     this.gameStore
+    this.modernMusaUIContainer
+
     this.arcadeCity
+    this.unityUIContainer
+
     this.deployosHermanos
+    this.deployosUIContainer
 
     this.parco
     this.fontana
@@ -328,15 +338,15 @@ class App{
   loadUIs(){
     //House1UI
     const house1UI = House1UI()
-    const House1Container = house1UI[0]
+    this.house1UIContainer = house1UI[0]
     const House1ButtonNext = house1UI[1]
     const House1ButtonPrevious = house1UI[2]
 
     this.uiToTest.push( House1ButtonNext, House1ButtonPrevious );
       
     //VISIBILITA UI
-    //container.visible = false
-    this.scene.add( House1Container );
+    // this.house1UIContainer.visible = false
+    this.scene.add( this.house1UIContainer );
 
 
     //Tortuga Studio UI
@@ -347,6 +357,7 @@ class App{
     const tortugaButtonGoTo = tortugaUI[3]
 
     this.uiToTest.push(tortugaButtonNext, tortugaButtonPrevious, tortugaButtonGoTo)
+
     this.scene.add(tortugaContainer)
 
     //ModernMusa UI
@@ -357,6 +368,7 @@ class App{
     const modernMusaButtonGoTo = modernMusaUI[3]
 
     this.uiToTest.push(modernMusaButtonNext, modernMusaButtonPrevious, modernMusaButtonGoTo)
+
     this.scene.add( modernMusaContainer );
 
     //UnityUI
@@ -367,6 +379,7 @@ class App{
     const unityButtonGoTo = unityUI[3]
 
     this.uiToTest.push(unityButtonNext, unityButtonPrevious, unityButtonGoTo)
+
     this.scene.add(unityContainer);
 
     //DeployosHermanosUI
@@ -377,7 +390,27 @@ class App{
     const deployosButtonGoTo = deployosUI[3]
 
     this.uiToTest.push( deployosButtonNext, deployosButtonPrevious, deployosButtonGoTo );
+
     this.scene.add( deployosContainer );
+  }
+
+  showUI(){
+    const distanceTreshold = 8
+    let distanceToUI
+    
+    if(this.house1){
+      distanceToUI = this.player.position.distanceTo(this.house1.position)
+      console.log(distanceToUI)
+    }
+    
+    if(distanceToUI < distanceTreshold){
+      this.house1UIContainer.visible = true
+      console.log(this.house1UIContainer)
+    }
+    else {
+      this.house1UIContainer.visible = false
+    }
+    
   }
 
   loadModels(){
@@ -726,7 +759,11 @@ class App{
 
     }
 
+    this.showUI()
+
     ThreeMeshUI.update();
+
+   
 
     this.renderer.render(this.scene, this.camera)
   }
