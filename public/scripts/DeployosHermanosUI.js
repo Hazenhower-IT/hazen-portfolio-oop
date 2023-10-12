@@ -78,7 +78,7 @@ export function DeployosHermanosUI(){
         width: 2.8,
     })
     container.add(imageBlock)
-    container.position.set(-60, 2.5, 6)
+    container.position.set(-60, 2.5, 6.5)
 
     //BUTTONS BLOCK
     const buttonContainer = new ThreeMeshUI.Block( {

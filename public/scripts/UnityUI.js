@@ -33,7 +33,7 @@ export function UnityUI(){
       contentDirection:"column",
       justifyContent: "space-between"
   });
-  container.position.set(30, 1.6, 20)
+  container.position.set(26.3, 1.6, 20)
   container.rotation.y = -Math.PI/2
 
   //TITLE BLOCK

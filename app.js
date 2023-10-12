@@ -2,7 +2,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import {VRButton} from "three/examples/jsm/webxr/VRButton"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as THREE from "three"
-import * as CANNON from "cannon"
+import * as CANNON from "cannon-es"
 import * as dat from "dat.gui"
 import ThreeMeshUI from 'three-mesh-ui'
   
@@ -48,22 +48,39 @@ class App{
     this.uiToTest = []
     this.intersectUI
 
+    this.planeBody
+
     this.player = new THREE.Object3D()
+    this.playerSpeed = 10
+    // this.playerBody = new THREE.Mesh(
+    //   new THREE.BoxGeometry(1,2,1),
+    //   new THREE.MeshLambertMaterial()
+    // )
+    // this.playerBody.position.y += 1
+    // this.playerBoundingBox = new THREE.Box3().setFromObject(this.playerBody)
+    // const playerHelper = new THREE.Box3Helper(this.playerBoundingBox)
+    
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.camera.position.set(0, 1.6, 0);
     this.player.add(this.camera)
+    // this.player.add(this.playerBoundingBox)
+    //this.player.add(this.playerHelper)
 
     this.scene = new THREE.Scene();
     this.scene.background = cubeTextureLoader.load([
-      "/skybox/px.jpg",
-      "/skybox/nx.jpg",
-      "/skybox/py.jpg",
-      "/skybox/ny.jpg",
-      "/skybox/pz.jpg",
-      "/skybox/nz.jpg",
+      "/skybox3/px.png",
+      "/skybox3/nx.png",
+      "/skybox3/py.png",
+      "/skybox3/ny.png",
+      "/skybox3/pz.png",
+      "/skybox3/nz.png",
     ])
     // this.scene.add(this.camera)
+
     this.scene.add(this.player)
+
+
+
     this.scene.add(new THREE.HemisphereLight(0x555555, 0xffffff));
 
     const light = new THREE.DirectionalLight(0xffffff)
@@ -78,7 +95,6 @@ class App{
     
 
     
-
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.shadowMap.enabled = true;
@@ -146,23 +162,49 @@ class App{
     //modelli
     this.loadedModel
 
+    this.wallDoor
+
+    this.wallNord
+    this.wallNordBBox
+
+    this.wallSud1
+    this.wallSud2
+    this.wallSudBBox
+
+    this.wallEast
+    this.wallEastBBox
+
+    this.wallWest
+    this.wallWestBBox
+
+    
+
+
     this.house1
     this.house1UIContainer
+    this.house1BBox
 
+    
     this.musicStore
     this.tortugaUIContainer
+    this.tortugaBBox
 
     this.gameStore
     this.modernMusaUIContainer
+    this.musaBBox
 
     this.arcadeCity
     this.unityUIContainer
+    this.unityBBox
 
     this.deployosHermanos
     this.deployosUIContainer
+    this.deployosBBox
 
     this.parco
+    this.parcoBBox
     this.fontana
+    this.fontanaBBox
     
     
     // Keyboard Controller
@@ -305,7 +347,7 @@ class App{
 
   
   updateMovement(delta){
-    const previousPosition = this.camera.position.clone()
+    const previousPosition  = this.player.position.clone()
 
     const cameraRotationSpeed = 2
     
@@ -314,10 +356,10 @@ class App{
     }
 
     if(this.keyPressed.shift){
-      this.moveSpeed = 20 * delta;
+      this.moveSpeed = (this.playerSpeed * 1.5) * delta;
     }
     else{
-      this.moveSpeed = 10 * delta;
+      this.moveSpeed = this.playerSpeed * delta;
     }
 
     if(this.keyPressed.ArrowRight || this.keyPressed.d){
@@ -334,9 +376,60 @@ class App{
     }
     
     //mantiene il player attaccato al pavimento in modo che non possa ne fluttuare, ne andare sotto
-    this.player.position.y = 0
+    //this.player.position.y = 0
 
     // Aggiungi altre azioni se necessario
+    if(this.checkCollision()){
+      this.player.position.copy(previousPosition)
+    }
+    
+  }
+
+  checkCollision(){
+    this.playerBoundingBox = new THREE.Box3()
+    const cameraWorldPosition = new THREE.Vector3()
+
+    this.camera.getWorldPosition(cameraWorldPosition)
+
+    this.playerBoundingBox.setFromCenterAndSize(cameraWorldPosition, new THREE.Vector3(1,1,1))
+    
+
+    if(this.playerBoundingBox.intersectsBox(this.house1BBox)){
+      console.log("collide!")
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.tortugaBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.musaBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.deployosBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsSphere(this.unityBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsSphere(this.fontanaBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.wallNordBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.wallSudBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.wallEastBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.wallWestBBox)){
+      return true
+    }
+
+    else{
+      return false  
+    }
+      
   }
 
   loadUIs(){
@@ -355,74 +448,195 @@ class App{
 
     //Tortuga Studio UI
     const tortugaUI = TortugaUI()
-    const tortugaContainer = tortugaUI[0]
+    this.tortugaUIContainer = tortugaUI[0]
     const tortugaButtonNext = tortugaUI[1]
     const tortugaButtonPrevious = tortugaUI[2]
     const tortugaButtonGoTo = tortugaUI[3]
 
     this.uiToTest.push(tortugaButtonNext, tortugaButtonPrevious, tortugaButtonGoTo)
 
-    this.scene.add(tortugaContainer)
+    this.scene.add(this.tortugaUIContainer)
 
     //ModernMusa UI
     const modernMusaUI = ModernMusaUI()
-    const modernMusaContainer = modernMusaUI[0]
+    this.modernMusaUIContainer = modernMusaUI[0]
     const modernMusaButtonNext = modernMusaUI[1]
     const modernMusaButtonPrevious = modernMusaUI[2]
     const modernMusaButtonGoTo = modernMusaUI[3]
 
     this.uiToTest.push(modernMusaButtonNext, modernMusaButtonPrevious, modernMusaButtonGoTo)
 
-    this.scene.add( modernMusaContainer );
+    this.scene.add( this.modernMusaUIContainer );
 
     //UnityUI
     const unityUI = UnityUI()
-    const unityContainer = unityUI[0]
+    this.unityUIContainer = unityUI[0]
     const unityButtonNext = unityUI[1]
     const unityButtonPrevious = unityUI[2]
     const unityButtonGoTo = unityUI[3]
 
     this.uiToTest.push(unityButtonNext, unityButtonPrevious, unityButtonGoTo)
 
-    this.scene.add(unityContainer);
+    this.scene.add(this.unityUIContainer);
 
     //DeployosHermanosUI
     const deployosUI = DeployosHermanosUI()
-    const deployosContainer = deployosUI[0]
+    this.deployosUIContainer = deployosUI[0]
     const deployosButtonNext = deployosUI[1]
     const deployosButtonPrevious = deployosUI[2]
     const deployosButtonGoTo = deployosUI[3]
 
     this.uiToTest.push( deployosButtonNext, deployosButtonPrevious, deployosButtonGoTo );
 
-    this.scene.add( deployosContainer );
+    this.scene.add( this.deployosUIContainer );
   }
 
   showUI(){
-    const distanceTreshold = 8
-    let distanceToUI
+    const distanceTreshold = 13
+    let distanceToHouse1UI
+    let distanceToTortugaUI
+    let distanceToMusaUI
+    let distanceToDeployosUI
+    let distanceToUnityUI
     
+    //registra la distanza tra player e il modello a cui è attaccata una UI in modalità VR
     if(this.renderer.xr.isPresenting){
       if(this.house1){
-        distanceToUI = this.renderer.xr.getCamera().position.distanceTo(this.house1.position)
+        distanceToHouse1UI = this.renderer.xr.getCamera().position.distanceTo(this.house1.position)
+      }
+      
+      if(this.musicStore){
+        distanceToTortugaUI = this.renderer.xr.getCamera().position.distanceTo(this.musicStore.position)
+      }
+
+      if(this.gameStore){
+        distanceToMusaUI = this.renderer.xr.getCamera().position.distanceTo(this.gameStore.position)
+      }
+
+      if(this.deployosHermanos){
+        distanceToDeployosUI = this.renderer.xr.getCamera().position.distanceTo(this.deployosHermanos.position)
+      }
+
+      if(this.arcadeCity){
+        distanceToUnityUI = this.renderer.xr.getCamera().position.distanceTo(this.arcadeCity.position)
+      }
+      
+    }
+    //registra la distanza tra player e il modello a cui è attaccata una UI in modalità NON VR
+    else{
+
+      if(this.house1){
+        distanceToHouse1UI = this.player.position.distanceTo(this.house1.position)
+        
+      }
+
+      if(this.musicStore){
+        distanceToTortugaUI = this.player.position.distanceTo(this.musicStore.position)
+
+      }
+
+      if(this.gameStore){
+        distanceToMusaUI = this.player.position.distanceTo(this.gameStore.position)
+ 
+      }
+
+      if(this.deployosHermanos){
+        distanceToDeployosUI = this.player.position.distanceTo(this.deployosHermanos.position)
+
+      }
+
+      if(this.arcadeCity){
+        distanceToUnityUI = this.player.position.distanceTo(this.arcadeCity.position)
+
       }
     }
-    else if(this.house1){
-      distanceToUI = this.player.position.distanceTo(this.house1.position)
-      console.log(distanceToUI)
-    }
-    
-    if(distanceToUI < distanceTreshold){
+
+    //se la distanza tra player e uno dei modelli a cui è attaccata la ui è minore della distanzaTreshold, allora mostra la corrispondere UI
+    if(distanceToHouse1UI < distanceTreshold){
       this.house1UIContainer.visible = true
-      console.log(this.house1UIContainer)
+      //console.log(this.house1UIContainer)
     }
+    //altrimenti la nasconde
     else {
       this.house1UIContainer.visible = false
+    }
+
+    if(distanceToTortugaUI < distanceTreshold){
+      this.tortugaUIContainer.visible = true
+    }
+    else {
+      this.tortugaUIContainer.visible = false
+    }
+
+    if(distanceToMusaUI < distanceTreshold){
+      this.modernMusaUIContainer.visible = true
+    }
+    else {
+      this.modernMusaUIContainer.visible = false
+    }
+
+    if(distanceToUnityUI < distanceTreshold){
+      this.unityUIContainer.visible = true
+    }
+    else {
+      this.unityUIContainer.visible = false
+    }
+
+    if(distanceToDeployosUI < distanceTreshold){
+      this.deployosUIContainer.visible = true
+    }
+    else {
+      this.deployosUIContainer.visible = false
     }
     
   }
 
+  loadWalls(){
+    let wallTexture = this.textureLoader.load("/texture/walltexture6.png")
+    wallTexture.wrapS = THREE.RepeatWrapping
+    wallTexture.wrapT = THREE.RepeatWrapping
+    wallTexture.repeat.set(50,5)
+
+    let wallSudTexture = this.textureLoader.load("/texture/walltexture6.png")
+    wallSudTexture.wrapS = THREE.RepeatWrapping
+    wallSudTexture.wrapT = THREE.RepeatWrapping
+    wallSudTexture.repeat.set(20,2)
+  
+    
+    this.wallNord = new THREE.Mesh(new THREE.BoxGeometry(150, 10, 0.2), new THREE.MeshBasicMaterial({map: wallTexture}))
+    this.wallNord.position.set(0, 5, -75)
+    this.scene.add(this.wallNord)
+
+    this.wallSud1 = new THREE.Mesh(new THREE.BoxGeometry(70, 10, 0.2), new THREE.MeshBasicMaterial({map: wallSudTexture}))
+    this.wallSud1.position.set(-40, 5, 75)
+    this.scene.add(this.wallSud1)
+
+    this.wallSud2 = new THREE.Mesh(new THREE.BoxGeometry(70, 10, 0.2), new THREE.MeshBasicMaterial({map: wallSudTexture}))
+    this.wallSud2.position.set(40, 5, 75)
+    this.scene.add(this.wallSud2)
+
+    this.wallEast = new THREE.Mesh(new THREE.BoxGeometry(0.2, 10, 150), new THREE.MeshBasicMaterial({map: wallTexture}))
+    this.wallEast.position.set(75, 5, 0)
+    this.scene.add(this.wallEast)
+
+    this.wallWest = new THREE.Mesh(new THREE.BoxGeometry(0.2, 10, 150), new THREE.MeshBasicMaterial({map: wallTexture}))
+    this.wallWest.position.set(-75, 5, 0)
+    this.scene.add(this.wallWest)
+  }
+
   loadModels(){
+
+    //Porta Principale
+    this.gltfLoader.load("/models/wall-door/scene.gltf", (model)=>{
+      this.loadedModel = model.scene
+      this.wallDoor = this.loadedModel.clone()
+
+      this.wallDoor.name="wallDoor"
+      this.wallDoor.scale.set(2,2,1)
+      this.wallDoor.position.set(0, 0, 76)
+
+      this.scene.add(this.wallDoor)
+    })
 
     //House1
     this.gltfLoader.load("/models/house/scene.gltf", (model)=>{
@@ -435,7 +649,6 @@ class App{
       this.house1.position.set(60, 0, 60)
       this.house1.rotation.z = Math.PI
 
-      
       this.scene.add(this.house1)
     })
 
@@ -515,11 +728,90 @@ class App{
       
       this.fontana.name="fontana"
       this.fontana.scale.set(1, 1, 1)
-      this.fontana.position.set(-47.6, 0, -36)
+      this.fontana.position.set(-47.6, -0.5, -36)
       
       this.scene.add(this.fontana)
     })
 
+    
+
+  }
+
+  loadModelsBoundingBoxes(){
+    const house1Placeholder = new THREE.Mesh(new THREE.BoxGeometry(8.3, 10, 16), new THREE.MeshBasicMaterial({color:0xff0000}))
+    house1Placeholder.position.set(59.5, 5 , 61.3) 
+    this.scene.add(house1Placeholder)
+    this.house1BBox = new THREE.Box3().setFromObject(house1Placeholder)
+    house1Placeholder.visible = false;
+
+    //const house1BoxHelper = new THREE.Box3Helper(this.house1BBox)
+    //this.scene.add(house1BoxHelper)
+
+    const tortugaPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(11,6,7.8), new THREE.MeshPhongMaterial({color:0xff0000}))
+    tortugaPlaceholder.position.set(-58.5, 3, 62.5)
+    this.scene.add(tortugaPlaceholder)
+    this.tortugaBBox = new THREE.Box3().setFromObject(tortugaPlaceholder)
+    tortugaPlaceholder.visible = false
+
+    //const tortugaBoxHelper = new THREE.Box3Helper(this.tortugaBBox)
+    //this.scene.add(tortugaBoxHelper)
+
+    const musaPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(7.4, 6 , 8.2 ), new THREE.MeshBasicMaterial({color:0xff0000}))
+    musaPlaceholder.position.set(-50, 3, 40)
+    this.scene.add(musaPlaceholder)
+    this.musaBBox = new THREE.Box3().setFromObject(musaPlaceholder)
+    musaPlaceholder.visible = false
+
+    // const musaBoxHelper = new THREE.Box3Helper(this.musaBBox)
+    // this.scene.add(musaBoxHelper)
+
+    const unityPlaceholder = new THREE.Mesh(new THREE.SphereGeometry(4.7, 32), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}))
+    unityPlaceholder.position.set(31, 2.1, 20)
+    this.scene.add(unityPlaceholder)
+   
+    this.unityBBox =  new THREE.Sphere().set(new THREE.Vector3(31, 2.1, 20), 4.7)
+    unityPlaceholder.visible = false
+
+    
+
+    const deployosPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(23, 6, 15.5), new THREE.MeshBasicMaterial({color: 0xff0000}))
+    deployosPlaceholder.position.set(-60, 3, -1.64)
+    this.scene.add(deployosPlaceholder)
+    this.deployosBBox = new THREE.Box3().setFromObject(deployosPlaceholder)
+    deployosPlaceholder.visible = false
+
+    //const deployosHelper = new THREE.Box3Helper(this.deployosBBox)
+    //this.scene.add(deployosHelper)
+
+    const fontanaPlaceholder = new THREE.Mesh(new THREE.SphereGeometry(5 , 32), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    fontanaPlaceholder.position.set(-47.6, 2, -36)
+    this.scene.add(fontanaPlaceholder)
+    this.fontanaBBox = new THREE.Sphere().set(new THREE.Vector3(-47.6, 2, -36), 5 )
+    fontanaPlaceholder.visible = false
+
+
+    //Collisioni con i muri della città
+    const nordWallPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(150, 10, 0.4), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    nordWallPlaceholder.position.set(0, 5, -75)
+    this.scene.add(nordWallPlaceholder)
+    this.wallNordBBox = new THREE.Box3().setFromObject(nordWallPlaceholder)
+    nordWallPlaceholder.visible = false
+
+    const sudWallPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(150, 10, 0.4), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    sudWallPlaceholder.position.set(0, 5, 75)
+    this.scene.add(sudWallPlaceholder)
+    this.wallSudBBox = new THREE.Box3().setFromObject(sudWallPlaceholder)
+    sudWallPlaceholder.visible = false
+
+    const eastWallPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(0.4, 10, 150), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    eastWallPlaceholder.position.set(75, 5, 0)
+    this.wallEastBBox = new THREE.Box3().setFromObject(eastWallPlaceholder)
+    eastWallPlaceholder.visible = false
+  
+    const westWallPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(0.4, 10, 150), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    westWallPlaceholder.position.set(-75, 5, 0)
+    this.wallWestBBox = new THREE.Box3().setFromObject(westWallPlaceholder)
+    westWallPlaceholder.visible = false
   }
 
 
@@ -558,10 +850,11 @@ class App{
     )
     this.marker.visible = false;
     this.scene.add(this.marker)
-
+    
+    this.loadWalls()
     this.loadModels()
     this.loadUIs()
-
+    this.loadModelsBoundingBoxes()
 
     this.initPhysics();
   
@@ -569,20 +862,26 @@ class App{
   }
 
   initPhysics(){
-    this.world = new CANNON.World();
+    this.world = new CANNON.World({
+      gravity: new CANNON.Vec3(0, -9.81, 0)
+    });
+
     this.dt = 1.0 / 60.0;
-    this.damping = 0.01;
+    // this.damping = 0.01;
 
-    this.world.broadphase = new CANNON.NaiveBroadphase();
-    this.world.gravity.set(0, -10, 0);
+    // this.world.broadphase = new CANNON.NaiveBroadphase();
+    // this.world.gravity.set(0, -10, 0);
 
-    const groundShape = new CANNON.Plane();
-    const groundBody = new CANNON.Body({mass:0 })
-    groundBody.quaternion.setFromAxisAngle( new CANNON.Vec3(1, 0, 0), -Math.PI/2);
-    groundBody.addShape(groundShape)
-    this.world.add(groundBody);
+
+    this.planeBody = new CANNON.Body({
+      shape: new CANNON.Plane(),
+      //mass: 0,
+      type: CANNON.Body.STATIC
+    })
+
+    this.world.addBody(this.planeBody)
+    this.planeBody.quaternion.setFromEuler(-Math.PI/2, 0, 0)
     
-
   }
 
   setupVR(){
@@ -786,7 +1085,14 @@ class App{
     ThreeMeshUI.update();
 
    
+    //UPDATING THE PHYSICS WORLD
+    this.world.step(this.dt);
+    
+    this.plane.position.copy(this.planeBody.position)
+    this.plane.quaternion.copy(this.planeBody.quaternion)
 
+
+    
     this.renderer.render(this.scene, this.camera)
   }
 
