@@ -17,6 +17,7 @@ import { ModernMusaUI } from "./public/scripts/ModernMusaUI"
 import { UnityUI } from "./public/scripts/UnityUI"
 import { DeployosHermanosUI } from "./public/scripts/DeployosHermanosUI"
 import { House1UI } from "./public/scripts/House1UI"
+import { XRWorldUI } from "./public/scripts/XRWorldUI"
 
 class App{
   constructor(){
@@ -196,6 +197,11 @@ class App{
     this.arcadeCity
     this.unityUIContainer
     this.unityBBox
+
+    this.xrWorldModel
+    this.xrWorldUIContainer
+    this.xrWorldBBox
+    this.xrWorldBBox2
 
     this.deployosHermanos
     this.deployosUIContainer
@@ -395,7 +401,6 @@ class App{
     
 
     if(this.playerBoundingBox.intersectsBox(this.house1BBox)){
-      console.log("collide!")
       return true
     }
     else if(this.playerBoundingBox.intersectsBox(this.tortugaBBox)){
@@ -408,6 +413,12 @@ class App{
       return true
     }
     else if(this.playerBoundingBox.intersectsSphere(this.unityBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.xrWorldBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.xrWorldBBox2)){
       return true
     }
     else if(this.playerBoundingBox.intersectsSphere(this.fontanaBBox)){
@@ -425,7 +436,7 @@ class App{
     else if(this.playerBoundingBox.intersectsBox(this.wallWestBBox)){
       return true
     }
-
+ 
     else{
       return false  
     }
@@ -479,6 +490,17 @@ class App{
 
     this.scene.add(this.unityUIContainer);
 
+
+    //XRWorldUI
+    const xrWorldUI = XRWorldUI()
+    this.xrWorldUIContainer = xrWorldUI[0]
+    const xrWorldButtonNext = xrWorldUI[1]
+    const xrWorldButtonPrevious = xrWorldUI[2]
+    const xrWorldButtonGoTo = xrWorldUI[3]
+
+    this.uiToTest.push(xrWorldButtonNext, xrWorldButtonPrevious, xrWorldButtonGoTo)
+    this.scene.add(this.xrWorldUIContainer)
+
     //DeployosHermanosUI
     const deployosUI = DeployosHermanosUI()
     this.deployosUIContainer = deployosUI[0]
@@ -493,11 +515,13 @@ class App{
 
   showUI(){
     const distanceTreshold = 13
+    const xrWorldDistanceTreshold = 19
     let distanceToHouse1UI
     let distanceToTortugaUI
     let distanceToMusaUI
     let distanceToDeployosUI
     let distanceToUnityUI
+    let distanceToXRWorldUI
     
     //registra la distanza tra player e il modello a cui è attaccata una UI in modalità VR
     if(this.renderer.xr.isPresenting){
@@ -519,6 +543,10 @@ class App{
 
       if(this.arcadeCity){
         distanceToUnityUI = this.renderer.xr.getCamera().position.distanceTo(this.arcadeCity.position)
+      }
+
+      if(this.xrWorldModel){
+        distanceToXRWorldUI = this.renderer.xr.getCamera().position.distanceTo(this.xrWorldModel.position)
       }
       
     }
@@ -548,6 +576,10 @@ class App{
       if(this.arcadeCity){
         distanceToUnityUI = this.player.position.distanceTo(this.arcadeCity.position)
 
+      }
+
+      if(this.xrWorldModel){
+        distanceToXRWorldUI = this.player.position.distanceTo(this.xrWorldModel.position)
       }
     }
 
@@ -582,12 +614,20 @@ class App{
       this.unityUIContainer.visible = false
     }
 
+    if(distanceToXRWorldUI < xrWorldDistanceTreshold){
+      this.xrWorldUIContainer.visible = true
+    }
+    else{
+      this.xrWorldUIContainer.visible = false
+    }
+
     if(distanceToDeployosUI < distanceTreshold){
       this.deployosUIContainer.visible = true
     }
     else {
       this.deployosUIContainer.visible = false
     }
+
     
   }
 
@@ -693,6 +733,19 @@ class App{
       this.scene.add(this.arcadeCity)
     })
 
+    //XR World
+    this.gltfLoader.load("/models/xr-world/scene.gltf", (model)=>{
+      this.loadedModel = model.scene.children[0]
+      this.xrWorldModel = this.loadedModel.clone()
+
+      this.xrWorldModel.name = "XRWorld"
+      this.xrWorldModel.scale.set(1,1,1)
+      this.xrWorldModel.position.set(30 , 0.01, -20)
+      this.xrWorldModel.rotation.z += -Math.PI/2
+
+      this.scene.add(this.xrWorldModel)
+    })
+
      //SSD - Deployos Hermanos
      this.gltfLoader.load("/models/deployos-hermanos/scene.gltf", (model)=>{
       
@@ -707,19 +760,20 @@ class App{
       this.scene.add(this.deployosHermanos)
     })
 
-    //Parco
-    this.gltfLoader.load("/models/city-park-at-sunset/scene.gltf", (model)=>{
+    // //Parco
+    // this.gltfLoader.load("/models/city-park-at-sunset/scene.gltf", (model)=>{
       
-      this.loadedModel = model.scene.children[0]
-      this.parco = this.loadedModel.clone()
+    //   this.loadedModel = model.scene.children[0]
+    //   this.parco = this.loadedModel.clone()
       
-      this.parco.name="parco"
-      this.parco.scale.set(1, 1, 1)
-      this.parco.position.set(-7, 0, -36)
+    //   this.parco.name="parco"
+    //   this.parco.scale.set(1, 1, 1)
+    //   this.parco.position.set(-7, 0, -36)
       
-      this.scene.add(this.parco)
-    })
+    //   this.scene.add(this.parco)
+    // })
 
+    /** */
     //Fontana1
     this.gltfLoader.load("/models/medieval-fountain/scene.gltf", (model)=>{
       
@@ -771,6 +825,17 @@ class App{
    
     this.unityBBox =  new THREE.Sphere().set(new THREE.Vector3(31, 2.1, 20), 4.7)
     unityPlaceholder.visible = false
+
+    const xrWorldPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(8.3, 10, 8.2), new THREE.MeshBasicMaterial({color:0xff0000, wireframe: true}))
+    xrWorldPlaceholder.position.set(30, 5.01, -6)
+    this.scene.add(xrWorldPlaceholder)
+    const xrWorldPlaceholder2 = new THREE.Mesh(new THREE.BoxGeometry(3, 10, 5), new THREE.MeshBasicMaterial({color: 0x0000ff, wireframe:true}))
+    xrWorldPlaceholder2.position.set(24.5, 5.01, -6)
+    this.scene.add(xrWorldPlaceholder2)
+    this.xrWorldBBox = new THREE.Box3().setFromObject(xrWorldPlaceholder)
+    this.xrWorldBBox2 = new THREE.Box3().setFromObject(xrWorldPlaceholder2)
+    xrWorldPlaceholder.visible = false
+    xrWorldPlaceholder2.visible = false
 
     
 
