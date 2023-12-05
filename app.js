@@ -184,6 +184,9 @@ class App{
     this.house1
     this.house1UIContainer
     this.house1BBox
+    this.house1TrashBBox
+    this.house1SecchioBBox
+    this.house1PedanaBBox
 
     
     this.musicStore
@@ -401,6 +404,15 @@ class App{
     
 
     if(this.playerBoundingBox.intersectsBox(this.house1BBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.house1TrashBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.house1SecchioBBox)){
+      return true
+    }
+    else if(this.playerBoundingBox.intersectsBox(this.house1PedanaBBox)){
       return true
     }
     else if(this.playerBoundingBox.intersectsBox(this.tortugaBBox)){
@@ -798,6 +810,24 @@ class App{
     this.house1BBox = new THREE.Box3().setFromObject(house1Placeholder)
     house1Placeholder.visible = false;
 
+    const trashPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2 ,11.5), new THREE.MeshBasicMaterial({color:0x0000ff, wireframe: true}))
+    trashPlaceholder.position.set(65, 1, 60)
+    this.scene.add(trashPlaceholder)
+    this.house1TrashBBox = new THREE.Box3().setFromObject(trashPlaceholder)
+    trashPlaceholder.visible = false;
+
+    const secchioPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(.9, 2 ,1.3), new THREE.MeshBasicMaterial({color:0x00ffff, wireframe: true}))
+    secchioPlaceholder.position.set(66.5, 1, 59)
+    this.scene.add(secchioPlaceholder)
+    this.house1SecchioBBox = new THREE.Box3().setFromObject(secchioPlaceholder)
+    secchioPlaceholder.visible = false;
+
+    const pedanaPlaceholder = new THREE.Mesh(new THREE.BoxGeometry(3.2, 2 ,2.3), new THREE.MeshBasicMaterial({color:0x00ffff, wireframe: true}))
+    pedanaPlaceholder.position.set(60.4, 1, 70)
+    this.scene.add(pedanaPlaceholder)
+    this.house1PedanaBBox = new THREE.Box3().setFromObject(pedanaPlaceholder)
+    pedanaPlaceholder.visible = false;
+
     //const house1BoxHelper = new THREE.Box3Helper(this.house1BBox)
     //this.scene.add(house1BoxHelper)
 
@@ -879,6 +909,29 @@ class App{
     westWallPlaceholder.visible = false
   }
 
+  loadBuildingSign(){
+    const tortugaSignTexture = this.textureLoader.load("texture/tortuga-sign.png")
+    const tortugaSign = new THREE.Mesh(new THREE.BoxGeometry(.4,3,6), new THREE.MeshPhongMaterial({map:tortugaSignTexture, side: THREE.DoubleSide}))
+    tortugaSign.position.set(-53.4, 6, 62.5)
+    this.scene.add(tortugaSign)
+
+    const musaSignTexture = this.textureLoader.load("/texture/musa-sign.png")
+    const musaSign = new THREE.Mesh(new THREE.BoxGeometry(.1,1.5,8.2), new THREE.MeshPhongMaterial({map:musaSignTexture, side: THREE.DoubleSide}))
+    musaSign.position.set(-46.4, 5.45, 39.9)
+    this.scene.add(musaSign)
+
+    const hermanosSignTexture = this.textureLoader.load("/texture/deployos-sign.png")
+    const hermanosSign = new THREE.Mesh(new THREE.BoxGeometry(15, 8, .1), new THREE.MeshPhongMaterial({map:hermanosSignTexture, side: THREE.DoubleSide}))
+    hermanosSign.position.set(-60, 10, 6)
+    this.scene.add(hermanosSign)
+
+    const XRWorldSignTexture = this.textureLoader.load("/texture/XRWorld-sign.png")
+    const XRWorldSign = new THREE.Mesh(new THREE.BoxGeometry(.1, 3, 5.2), new THREE.MeshPhongMaterial({map:XRWorldSignTexture, side: THREE.DoubleSide}))
+    XRWorldSign.position.set(24.7, 9.1, -6.1)
+    this.scene.add(XRWorldSign)
+
+  }
+
 
   initScene(){
     
@@ -919,6 +972,7 @@ class App{
     this.loadWalls()
     this.loadModels()
     this.loadUIs()
+    this.loadBuildingSign()
     this.loadModelsBoundingBoxes()
 
     this.initPhysics();

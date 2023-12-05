@@ -147,7 +147,7 @@ export function UnityUI(){
   );
 
   buttonGoTo.add(
-      new ThreeMeshUI.Text({ content: "See More"})
+      new ThreeMeshUI.Text({ content: "Play"})
   )
   
   // Create states for the buttons.

@@ -147,7 +147,7 @@ export function XRWorldUI(){
   );
 
   buttonGoTo.add(
-      new ThreeMeshUI.Text({ content: "See More"})
+      new ThreeMeshUI.Text({ content: "Download"})
   )
   
   // Create states for the buttons.
