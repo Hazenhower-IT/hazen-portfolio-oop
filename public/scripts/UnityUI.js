@@ -1,9 +1,11 @@
 import ThreeMeshUI from 'three-mesh-ui'
 import FontJSON from '../../src/font/Roboto-msdf.json';
 import FontImage from '../../src/font/Roboto-msdf.png';
-import Image from "../../src/unity1.png"
-import Image1 from "../../src/unity2.png";
-import Image2 from "../../src/unity3.png";
+import Image1 from "../../src/unity1.png"
+import Image2 from "../../src/unity2.png";
+import Image3 from "../../src/unity3.png";
+import Image4 from "../../src/unity4.png";
+import Image5 from "../../src/unity5.png";
 import * as THREE from "three"
 
 export function UnityUI(){
@@ -16,10 +18,12 @@ export function UnityUI(){
       "Jackie Junks",
       "Flappy Airplane",
       "Office Runner",
+      "Clive The Cat",
+      "HauntedJaunt",
   ]
 
   const images = [
-      Image, Image1, Image2
+      Image1, Image2, Image3, Image4, Image5 
   ]
 
   //UI CONTAINER
@@ -33,7 +37,7 @@ export function UnityUI(){
       contentDirection:"column",
       justifyContent: "space-between"
   });
-  container.position.set(30, 1.6, 20)
+  container.position.set(26.3, 1.6, 20)
   container.rotation.y = -Math.PI/2
 
   //TITLE BLOCK
@@ -143,7 +147,7 @@ export function UnityUI(){
   );
 
   buttonGoTo.add(
-      new ThreeMeshUI.Text({ content: "See More"})
+      new ThreeMeshUI.Text({ content: "Play"})
   )
   
   // Create states for the buttons.
@@ -216,6 +220,13 @@ export function UnityUI(){
                 break;
             case 2:
                 window.open("https://play.unity.com/mg/other/juniorprogrammerbonuschallenge3-5")
+                break;
+            case 3:
+                window.open("https://play.unity.com/mg/other/webgl-builds-374246")
+                break;
+            case 4:
+                window.open("https://play.unity.com/mg/other/webgl-builds-374244")
+                break;
         }
         //   window.open("https://hazenhower-portfolio.web.app")
           window.dispatchEvent(new MouseEvent("pointerup", {button: 0}))

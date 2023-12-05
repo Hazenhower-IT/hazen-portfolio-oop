@@ -1,0 +1,11 @@
+Model Information:
+* title:	Simple Castle Gate
+* source:	https://sketchfab.com/3d-models/simple-castle-gate-0e2fa827aa034f718a35f6094fd097a7
+* author:	JJTale (https://sketchfab.com/JJTale)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Simple Castle Gate" (https://sketchfab.com/3d-models/simple-castle-gate-0e2fa827aa034f718a35f6094fd097a7) by JJTale (https://sketchfab.com/JJTale) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
