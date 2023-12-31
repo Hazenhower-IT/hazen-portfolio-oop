@@ -1090,7 +1090,10 @@ class App{
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
-      intersects = this.raycaster.intersectObjects([this.plane])
+      //TRY WITHOUS PLANE
+      //intersects = this.raycaster.intersectObjects([this.plane])
+      intersects = this.raycaster.intersectObjects()
+
       this.intersectUI = this.raycastUI()
       
       
