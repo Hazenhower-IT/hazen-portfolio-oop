@@ -1092,7 +1092,7 @@ class App{
 
       //TRY WITHOUS PLANE
       //intersects = this.raycaster.intersectObjects([this.plane])
-      intersects = this.raycaster.intersectObjects()
+      intersects = this.raycaster.intersectObjects([this.scene], true)
 
       this.intersectUI = this.raycastUI()
       
