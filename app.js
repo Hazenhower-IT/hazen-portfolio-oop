@@ -1092,28 +1092,30 @@ class App{
 
       //TRY WITHOUS PLANE
       //intersects = this.raycaster.intersectObjects([this.plane])
-      intersects = this.raycaster.intersectObjects([this.scene.children], true)
+      intersects = this.raycaster.intersectObjects([this.plane])
 
       this.intersectUI = this.raycastUI()
       
       
 
-      if(intersects.length > 0){
+      ///ERA QUA
+      
+        
+    }
+
+    //L HO MESSO QUA
+    if(intersects.length > 0){
         controller.children[0].scale.z = intersects[0].distance;
 
         if(intersects[0].object.name === "plane"){
           this.INTERSECTION = intersects[0].point
         }
         
-      }
-        
     }
-
     
-
-
+    //E CAMBIATO IF IN ELSE
     // Update targeted button state (if any)
-    if ( this.intersectUI && this.intersectUI.object.isUI ) {
+    else if ( this.intersectUI && this.intersectUI.object.isUI ){
       controller.children[0].scale.z = this.intersectUI.distance;
       this.updateButtonStates()
     }
