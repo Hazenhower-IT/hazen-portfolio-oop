@@ -1090,11 +1090,16 @@ class App{
       this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
       this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix)
 
-      //TRY WITHOUS PLANE
-      //intersects = this.raycaster.intersectObjects([this.plane])
-      intersects = this.raycaster.intersectObjects([this.plane])
 
       this.intersectUI = this.raycastUI()
+      //TRY WITHOUS PLANE
+      //intersects = this.raycaster.intersectObjects([this.plane])
+      if(this.intersectUI === null){
+
+        intersects = this.raycaster.intersectObjects([this.plane])
+      }
+
+      
       
       
 
@@ -1113,7 +1118,7 @@ class App{
         
     }
     
-    //E CAMBIATO IF IN ELSE
+    //E CAMBIATO IF IN ELSE if
     // Update targeted button state (if any)
     else if ( this.intersectUI && this.intersectUI.object.isUI ){
       controller.children[0].scale.z = this.intersectUI.distance;
